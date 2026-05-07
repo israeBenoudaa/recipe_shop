@@ -231,6 +231,139 @@
   #daily-tbody td:nth-child(5),#daily-tbody td:nth-child(6){white-space:normal;word-break:break-word;line-height:1.4}
   /* commentaire & produits : tronqué */
   #daily-tbody td:nth-child(9),#daily-tbody td:nth-child(10){white-space:normal;word-break:break-word;line-height:1.4}
+
+  /* ===== HAMBURGER ===== */
+  .menu-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;border-radius:var(--rs);flex-shrink:0}
+  .menu-toggle span{display:block;width:20px;height:2px;background:var(--muted);border-radius:2px;transition:var(--tr)}
+  .menu-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .menu-toggle.open span:nth-child(2){opacity:0}
+  .menu-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+  /* ===== SIDEBAR OVERLAY ===== */
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:49;backdrop-filter:blur(2px)}
+  .sidebar-overlay.open{display:block}
+
+  /* ===== BOTTOM NAV MOBILE (caché sur desktop) ===== */
+  .mobile-bottomnav{display:none}
+
+  /* ===== TABLET ≤1024px ===== */
+  @media(max-width:1024px){
+    .stats-row{grid-template-columns:repeat(3,1fr)}
+    .charts-row{grid-template-columns:1fr}
+  }
+
+  /* ===== MOBILE ≤768px ===== */
+  @media screen and (max-width:768px){
+
+    /* --- Sidebar : masquée par défaut, overlay au clic --- */
+    .sidebar,aside.sidebar{display:none !important;visibility:hidden !important}
+    .sidebar.open,aside.sidebar.open{
+      display:flex !important;
+      visibility:visible !important;
+      position:fixed !important;
+      top:0 !important;left:0 !important;bottom:0 !important;
+      width:240px !important;
+      z-index:400 !important;
+      animation:sidebarIn .22s ease;
+    }
+    @keyframes sidebarIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+
+    /* --- Main : pleine largeur --- */
+    .main{margin-left:0 !important;width:100vw !important;max-width:100% !important}
+
+    /* --- Hamburger VISIBLE pour ouvrir la sidebar --- */
+    .menu-toggle{display:flex !important}
+
+    /* --- Overlay couvre aussi la bottom nav quand sidebar ouverte --- */
+    .sidebar-overlay{z-index:350}
+
+    /* --- Topbar compacte --- */
+    .topbar{padding:0 14px;height:52px;justify-content:space-between}
+    .topbar-title{font-size:.95rem}
+    #topbar-actions{gap:6px}
+    #topbar-actions .filter-sel{max-width:110px;font-size:.76rem;padding:5px 8px}
+    .btn-sm{padding:5px 10px;font-size:.76rem}
+
+    /* --- Contenu : padding bas pour la barre de nav --- */
+    .content{padding:12px 12px 80px 12px}
+
+    /* --- Stats : 2 par ligne --- */
+    .stats-row{grid-template-columns:1fr 1fr !important;gap:10px !important;margin-bottom:14px}
+    .stat-card{padding:14px 12px}
+    .stat-val{font-size:1.25rem}
+    .stat-lbl{font-size:.64rem;margin-bottom:6px}
+    .stat-sub{font-size:.66rem}
+
+    /* --- Graphiques : 1 par ligne --- */
+    .charts-row{grid-template-columns:1fr !important;gap:12px;margin-bottom:16px}
+    .chart-card{padding:14px}
+    .chart-title{font-size:.74rem}
+
+    /* --- Section headers --- */
+    .sec-head{flex-wrap:wrap;gap:8px;margin-bottom:12px}
+    .daily-hd{flex-wrap:wrap;gap:8px}
+    .daily-nav{flex-wrap:wrap;gap:8px;margin-bottom:10px}
+    .daily-nav button{flex:1;min-width:90px;text-align:center}
+    .daily-nav input[type=date]{flex:1;min-width:130px}
+    .btn-excel{font-size:.76rem;padding:6px 10px}
+
+    /* --- Tables : scroll horizontal --- */
+    .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r)}
+    #view-products .tbl-wrap table,
+    #view-clients .tbl-wrap table{min-width:520px}
+
+    /* --- Barre de suppression --- */
+    .daily-del-bar,.clients-del-bar{flex-wrap:wrap;gap:8px}
+
+    /* --- Toast --- */
+    .toast{right:10px;left:10px;bottom:70px;text-align:center}
+
+    /* --- Modals --- */
+    .modal{max-height:94vh;width:calc(100vw - 24px)}
+    .backdrop{padding:12px}
+    .modal-hd{padding:16px 16px 0}
+    .modal-body{padding:14px 16px 16px}
+    .info-grid{grid-template-columns:1fr}
+    .pform-row{grid-template-columns:1fr}
+    .status-changer{gap:5px;flex-wrap:wrap}
+    .stt-btn{padding:5px 11px;font-size:.72rem}
+    .confirm-actions{flex-direction:column}
+    .confirm-actions button{width:100%}
+
+    /* --- Bottom Nav Mobile --- */
+    .mobile-bottomnav{
+      display:flex !important;
+      position:fixed;
+      bottom:0;left:0;right:0;
+      height:62px;
+      background:var(--bg2);
+      border-top:1px solid var(--b2);
+      z-index:300;
+      padding-bottom:env(safe-area-inset-bottom);
+    }
+    .mbn-btn{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      background:none;
+      border:none;
+      color:var(--muted);
+      font-family:'Epilogue',sans-serif;
+      font-size:.65rem;
+      font-weight:500;
+      cursor:pointer;
+      transition:color .15s;
+      padding:0;
+      letter-spacing:.02em;
+    }
+    .mbn-btn svg{width:21px;height:21px;stroke-width:1.7}
+    .mbn-btn.active{color:var(--gold)}
+    .mbn-btn.active svg{stroke:var(--gold)}
+    .mbn-sep{width:1px;background:var(--b);margin:10px 0;flex-shrink:0}
+  }
 </style>
 </head>
 <body>
@@ -264,10 +397,14 @@
     <div style="font-size:.72rem;color:var(--muted)">Gestionnaire</div>
   </div>
 </aside>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
 <div class="main">
   <div class="topbar">
-    <div class="topbar-title" id="topbar-title">Commandes</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="menu-toggle" id="menu-toggle" onclick="toggleSidebar()" aria-label="Menu"><span></span><span></span><span></span></button>
+      <div class="topbar-title" id="topbar-title">Commandes</div>
+    </div>
     <div style="display:flex;align-items:center;gap:10px">
       <div id="topbar-actions" style="display:flex;align-items:center;gap:10px">
         <select class="filter-sel" id="status-filter" onchange="applyOrderFilter()">
@@ -494,6 +631,20 @@ let dailyDate = new Date().toISOString().slice(0, 10);
 // VUES
 // =========================================================
 const viewTitles = { orders:'Commandes', products:'Produits', clients:'Clients' };
+function toggleSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebar-overlay');
+  const btn = document.getElementById('menu-toggle');
+  sb.classList.toggle('open');
+  ov.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.getElementById('menu-toggle').classList.remove('open');
+}
+
 function showView(name, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + name).classList.add('active');
@@ -501,6 +652,7 @@ function showView(name, btn) {
   if (btn) btn.classList.add('active');
   document.getElementById('topbar-title').textContent = viewTitles[name];
   currentView = name;
+  closeSidebar();
 
   // Adapter la barre d'outils
   const ta = document.getElementById('topbar-actions');
@@ -516,6 +668,7 @@ function showView(name, btn) {
     ta.innerHTML = `<button class="btn-sm" onclick="refreshCurrent()">↺ Actualiser</button>`;
   }
 
+  mbnActive(name);
   if (name === 'orders') loadOrders();
   else if (name === 'products') loadProducts();
   else if (name === 'clients') loadClients();
@@ -1179,6 +1332,36 @@ loadOrders();
 setInterval(() => {
   if (currentView === 'orders' && !document.querySelector('.backdrop.open')) loadOrders();
 }, 30000);
+
+// Sync bottom nav active state
+function mbnActive(name) {
+  document.querySelectorAll('.mbn-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('mbn-' + name);
+  if (btn) btn.classList.add('active');
+}
 </script>
+
+<!-- NAVIGATION MOBILE BAS D'ÉCRAN -->
+<nav class="mobile-bottomnav" id="mobile-bottomnav">
+  <button class="mbn-btn active" id="mbn-orders" onclick="showView('orders',null);mbnActive('orders')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    Commandes
+  </button>
+  <div class="mbn-sep"></div>
+  <button class="mbn-btn" id="mbn-products" onclick="showView('products',null);mbnActive('products')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    Produits
+  </button>
+  <div class="mbn-sep"></div>
+  <button class="mbn-btn" id="mbn-clients" onclick="showView('clients',null);mbnActive('clients')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    Clients
+  </button>
+  <div class="mbn-sep"></div>
+  <button class="mbn-btn" onclick="logout()" style="color:#E05A5A">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    Quitter
+  </button>
+</nav>
 </body>
 </html>
