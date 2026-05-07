@@ -1174,6 +1174,11 @@ async function logout() {
 }
 
 loadOrders();
+
+// Auto-refresh orders every 30s so WhatsApp confirmations appear without manual reload
+setInterval(() => {
+  if (currentView === 'orders' && !document.querySelector('.backdrop.open')) loadOrders();
+}, 30000);
 </script>
 </body>
 </html>

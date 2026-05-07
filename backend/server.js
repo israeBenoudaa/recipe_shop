@@ -11,6 +11,7 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/recipe-sho
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // Afficher la page de connexion sur /vendor
 app.get('/vendor', (req, res) => res.sendFile(path.join(__dirname, '../vendor/login.html')));
@@ -24,9 +25,10 @@ app.use('/images',  express.static(path.join(__dirname, '../images')));
 app.use('/api/auth', require('./routes/auth'));
 
 // API métier
-app.use('/api/products', require('./routes/products'));
-app.use('/api/orders',   require('./routes/orders'));
-app.use('/api/clients',  require('./routes/clients'));
+app.use('/api/products',  require('./routes/products'));
+app.use('/api/orders',    require('./routes/orders'));
+app.use('/api/clients',   require('./routes/clients'));
+app.use('/api/whatsapp',  require('./routes/whatsapp'));
 
 // Routes racines
 app.get('/',       (req, res) => res.redirect('/client'));
