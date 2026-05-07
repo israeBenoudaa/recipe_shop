@@ -19,7 +19,10 @@ function toWA(phone) {
 }
 
 async function sendOrderConfirmation(telephone, order, prenom) {
-  if (!process.env.TWILIO_ACCOUNT_SID) return;
+  if (!process.env.TWILIO_ACCOUNT_SID) {
+    console.warn('⚠️  WhatsApp désactivé — TWILIO_ACCOUNT_SID absent des variables d\'environnement');
+    return;
+  }
   const to  = toWA(telephone);
   const ref = order._id.toString().slice(-6).toUpperCase();
   const body =

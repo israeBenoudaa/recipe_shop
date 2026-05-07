@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
     await order.save();
     await order.populate('client');
     res.status(201).json({ success: true, data: order });
-    require('../services/whatsapp').sendOrderConfirmation(client.telephone, order, client.prenom).catch(() => {});
+    require('../services/whatsapp').sendOrderConfirmation(client.telephone, order, client.prenom).catch(e => console.error('❌ WhatsApp order trigger:', e.message));
   } catch (e) { res.status(500).json({ success: false, message: e.message }); }
 });
 
