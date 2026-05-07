@@ -51,8 +51,8 @@ const seedVendor = async () => {
   const exists = await Vendor.findOne();
   if (!exists) {
     await Vendor.create({
-      nomComplet: 'achraf benouda',
-      motDePasse: crypto.createHash('sha256').update('achraf123454321').digest('hex')
+      nomComplet: process.env.VENDOR_USER || 'admin',
+      motDePasse: crypto.createHash('sha256').update(process.env.VENDOR_PASS || 'changeme').digest('hex')
     });
     console.log('✅ Vendeur créé (achraf benouda)');
   }
