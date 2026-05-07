@@ -254,6 +254,7 @@
 
   /* ===== MOBILE ≤768px ===== */
   @media screen and (max-width:768px){
+    body{overflow-x:hidden}
 
     /* --- Sidebar : masquée par défaut, overlay au clic --- */
     .sidebar,aside.sidebar{display:none !important;visibility:hidden !important}
@@ -269,7 +270,7 @@
     @keyframes sidebarIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
 
     /* --- Main : pleine largeur --- */
-    .main{margin-left:0 !important;width:100vw !important;max-width:100% !important}
+    .main{margin-left:0 !important;width:100% !important}
 
     /* --- Hamburger VISIBLE pour ouvrir la sidebar --- */
     .menu-toggle{display:flex !important}
