@@ -50,11 +50,13 @@ const seedVendor = async () => {
   const Vendor = require('./models/Vendor');
   const exists = await Vendor.findOne();
   if (!exists) {
+    const nom = process.env.VENDOR_USER || 'admin';
+    const pwd = process.env.VENDOR_PASS || 'changeme';
     await Vendor.create({
-      nomComplet: process.env.VENDOR_USER || 'admin',
-      motDePasse: crypto.createHash('sha256').update(process.env.VENDOR_PASS || 'changeme').digest('hex')
+      nomComplet: nom,
+      motDePasse: crypto.createHash('sha256').update(pwd).digest('hex')
     });
-    console.log('✅ Vendeur créé (achraf benouda)');
+    console.log('✅ Vendeur créé');
   }
 };
 
