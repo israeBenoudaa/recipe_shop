@@ -2,19 +2,19 @@ const express     = require('express');
 const router      = express.Router();
 const path        = require('path');
 const multer      = require('multer');
+const cloudinary  = require('cloudinary').v2;
 const Product     = require('../models/Product');
 const authVendor  = require('../middleware/authVendor');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, '../../images')),
-  filename:    (req, file, cb) => {
-    const ext  = path.extname(file.originalname).toLowerCase();
-    const name = Date.now() + '-' + Math.round(Math.random() * 1e6) + ext;
-    cb(null, name);
-  }
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+// Multer en mémoire — le fichier est envoyé directement à Cloudinary
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     cb(null, /^image\/(jpeg|png|webp|gif)$/.test(file.mimetype));
@@ -22,9 +22,19 @@ const upload = multer({
 });
 
 // POST upload image — vendor uniquement
-router.post('/upload', authVendor, upload.single('image'), (req, res) => {
+router.post('/upload', authVendor, upload.single('image'), async (req, res) => {
   if (!req.file) return res.status(400).json({ success: false, message: 'Fichier invalide' });
-  res.json({ success: true, path: '/images/' + req.file.filename });
+  try {
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        { folder: 'recipe-shop', resource_type: 'image' },
+        (err, r) => err ? reject(err) : resolve(r)
+      ).end(req.file.buffer);
+    });
+    res.json({ success: true, path: result.secure_url });
+  } catch (e) {
+    res.status(500).json({ success: false, message: 'Upload Cloudinary échoué : ' + e.message });
+  }
 });
 
 // GET tous (public — client et vendor)
