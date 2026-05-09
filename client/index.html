@@ -196,7 +196,14 @@
   .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--clay);background:#fff}
   .form-group input.error,.form-group select.error{border-color:var(--red)}
   .form-group textarea{resize:vertical;min-height:90px}
-  .form-group select{cursor:pointer;appearance:auto}
+  .city-wrapper{position:relative}
+  .city-dropdown{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--clay);border-top:none;border-radius:0 0 var(--rs) var(--rs);max-height:210px;overflow-y:auto;z-index:200;display:none;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+  .city-dropdown.open{display:block}
+  .city-opt{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;font-size:.87rem;cursor:pointer;border-bottom:1px solid var(--warm);gap:8px}
+  .city-opt:last-child{border:none}
+  .city-opt:hover,.city-opt.hi{background:var(--cream)}
+  .city-opt .co-name{color:var(--deep)}
+  .city-opt .co-fee{font-size:.75rem;font-weight:700;color:var(--earth);white-space:nowrap}
   .delivery-info{display:none;align-items:center;gap:12px;background:#f0f7f0;border:1.5px solid #b8d8b8;border-radius:var(--rs);padding:10px 14px;margin-top:-10px;margin-bottom:6px;font-size:.88rem;color:#2d6a2d;grid-column:1/-1}
   .delivery-info.show{display:flex}
   .delivery-info .di-fee{font-weight:700;font-size:.95rem}
@@ -296,115 +303,14 @@
       <div class="form-group"><label>الهاتف *</label><input type="tel" id="telephone" placeholder="06 XX XX XX XX"/></div>
       <div class="form-group"><label>البريد الإلكتروني (اختياري)</label><input type="email" id="email" placeholder="email@example.com"/></div>
       <div class="form-group"><label>عنوان التوصيل *</label><input type="text" id="adresse" placeholder="الشارع الرئيسي، الحي"/></div>
-      <div class="form-group"><label>المدينة *</label>
-        <select id="ville" onchange="updateDeliveryInfo()">
-          <option value="">-- اختر مدينتك --</option>
-          <optgroup label="📦 35 DH — توصيل خلال 24 ساعة">
-            <option value="Casablanca">الدار البيضاء — Casablanca</option>
-            <option value="Rabat">الرباط — Rabat</option>
-            <option value="Salé">سلا — Salé</option>
-            <option value="Témara">تمارة — Témara</option>
-            <option value="Mohammadia">المحمدية — Mohammadia</option>
-            <option value="Kenitra">القنيطرة — Kénitra</option>
-            <option value="Berrechid">برشيد — Berrechid</option>
-            <option value="Ben Slimane">بن سليمان — Ben Slimane</option>
-            <option value="Settat">سطات — Settat</option>
-            <option value="Bouznika">بوزنيقة — Bouznika</option>
-            <option value="Mediouna">مديونة — Mediouna</option>
-            <option value="Nouaceur">نواصر — Nouaceur</option>
-            <option value="Skhirat">الصخيرات — Skhirat</option>
-            <option value="Ain Harrouda">عين حرودة — Ain Harrouda</option>
-            <option value="Tit Mellil">تيط مليل — Tit Mellil</option>
-            <option value="El Mansouria">المنصورية — El Mansouria</option>
-          </optgroup>
-          <optgroup label="📦 40 DH — توصيل خلال 24 إلى 48 ساعة">
-            <option value="Marrakech">مراكش — Marrakech</option>
-            <option value="Fès">فاس — Fès</option>
-            <option value="Meknès">مكناس — Meknès</option>
-            <option value="Tanger">طنجة — Tanger</option>
-            <option value="Agadir">أكادير — Agadir</option>
-            <option value="Oujda">وجدة — Oujda</option>
-            <option value="Tétouan">تطوان — Tétouan</option>
-            <option value="El Jadida">الجديدة — El Jadida</option>
-            <option value="Safi">آسفي — Safi</option>
-            <option value="Nador">الناظور — Nador</option>
-            <option value="Khouribga">خريبكة — Khouribga</option>
-            <option value="Béni Mellal">بني ملال — Béni Mellal</option>
-            <option value="Khémisset">الخميسات — Khémisset</option>
-            <option value="Larache">العرائش — Larache</option>
-            <option value="Ksar El Kebir">القصر الكبير — Ksar El Kebir</option>
-            <option value="Taza">تازة — Taza</option>
-            <option value="Al Hoceima">الحسيمة — Al Hoceima</option>
-            <option value="Berkane">بركان — Berkane</option>
-            <option value="Guercif">كرسيف — Guercif</option>
-            <option value="Taourirt">تاوريرت — Taourirt</option>
-            <option value="Taounate">تاونات — Taounate</option>
-            <option value="Guelmim">كلميم — Guelmim</option>
-            <option value="Tiznit">تيزنيت — Tiznit</option>
-            <option value="Inzegane">إنزكان — Inzegane</option>
-            <option value="Ait Melloul">أيت ملول — Ait Melloul</option>
-            <option value="Taroudant">تارودانت — Taroudant</option>
-            <option value="Ouarzazate">ورزازات — Ouarzazate</option>
-            <option value="Errachidia">الراشيدية — Errachidia</option>
-            <option value="Chefchaouen">شفشاون — Chefchaouen</option>
-            <option value="Azrou">أزرو — Azrou</option>
-            <option value="Ifrane">إفران — Ifrane</option>
-            <option value="Khénifra">خنيفرة — Khénifra</option>
-            <option value="Midelt">ميدلت — Midelt</option>
-            <option value="El Kelaa des Sraghna">قلعة السراغنة — El Kelaa des Sraghna</option>
-            <option value="Youssoufia">يوسفية — Youssoufia</option>
-            <option value="Azilal">أزيلال — Azilal</option>
-            <option value="Sefrou">صفرو — Sefrou</option>
-            <option value="El Hajeb">الحاجب — El Hajeb</option>
-            <option value="Ain Taoujdate">عين تاوجطات — Ain Taoujdate</option>
-            <option value="Sidi Kacem">سيدي قاسم — Sidi Kacem</option>
-            <option value="Sidi Slimane">سيدي سليمان — Sidi Slimane</option>
-            <option value="Souk El Arbaa">سوق الأربعاء — Souk El Arbaa</option>
-            <option value="M'diq">المضيق — M'diq</option>
-            <option value="Martil">مرتيل — Martil</option>
-            <option value="Fnideq">الفنيدق — Fnideq</option>
-            <option value="Asilah">أصيلة — Asilah</option>
-            <option value="Beni Ansar">بني أنصار — Beni Ansar</option>
-            <option value="Nador (Selouane)">سلوان — Selouane</option>
-            <option value="Zaio">زايو — Zaio</option>
-            <option value="Missour">ميسور — Missour</option>
-            <option value="Boulmane">بولمان — Boulmane</option>
-            <option value="Biougra">بيوكرى — Biougra</option>
-            <option value="Imintanoute">إيمينتانوت — Imintanoute</option>
-            <option value="Chichaoua">شيشاوة — Chichaoua</option>
-            <option value="Essaouira">الصويرة — Essaouira</option>
-            <option value="Demnate">دمنات — Demnate</option>
-            <option value="Kalaat M'gouna">قلعة مكونة — Kalaat M'gouna</option>
-            <option value="Tinghir">تنغير — Tinghir</option>
-            <option value="Boujad">بوجاد — Boujad</option>
-            <option value="Kasba Tadla">قصبة تادلا — Kasba Tadla</option>
-            <option value="Fquih Ben Salah">الفقيه بن صالح — Fquih Ben Salah</option>
-            <option value="Souk Sebt Oulad Nemma">سوق السبت — Souk Sebt</option>
-            <option value="Mechraa Belkassiri">مشرع بلقصيري — Mechraa Belkassiri</option>
-            <option value="Sidi Bennour">سيدي بنور — Sidi Bennour</option>
-            <option value="Azemmour">أزمور — Azemmour</option>
-            <option value="Khenifra">خنيفرة — Khenifra</option>
-          </optgroup>
-          <optgroup label="📦 45 DH — توصيل خلال 48 إلى 96 ساعة">
-            <option value="Laayoune">العيون — Laayoune</option>
-            <option value="Dakhla">الداخلة — Dakhla</option>
-            <option value="Boujdour">بوجدور — Boujdour</option>
-            <option value="Smara">السمارة — Smara</option>
-            <option value="Tan-Tan">طانطان — Tan-Tan</option>
-            <option value="Assa">أسا — Assa</option>
-            <option value="Zagora">زاكورة — Zagora</option>
-            <option value="Tata">طاطا — Tata</option>
-            <option value="Sidi Ifni">سيدي إفني — Sidi Ifni</option>
-            <option value="Rissani">الريصاني — Rissani</option>
-            <option value="Merzouga">مرزوكة — Merzouga</option>
-            <option value="Figuig">فكيك — Figuig</option>
-            <option value="Tendrara">تندرارة — Tendrara</option>
-            <option value="Bouarfa">بوعرفة — Bouarfa</option>
-            <option value="Tarfaya">طرفاية — Tarfaya</option>
-            <option value="Assa-Zag">أسا الزاك — Assa-Zag</option>
-            <option value="Aousserd">أوسرد — Aousserd</option>
-          </optgroup>
-        </select>
+      <div class="form-group">
+        <label>المدينة *</label>
+        <div class="city-wrapper">
+          <input type="text" id="ville-input" placeholder="ابحث: الدار البيضاء أو Casablanca…" autocomplete="off"
+            oninput="filterCities(this.value)" onfocus="filterCities(this.value)" onblur="hideCityDD()"/>
+          <input type="hidden" id="ville"/>
+          <div id="city-dropdown" class="city-dropdown"></div>
+        </div>
       </div>
       <div class="delivery-info" id="delivery-info">
         <span>🚚</span>
@@ -432,10 +338,10 @@
     <div class="confirm-details" id="confirm-details"></div>
     <div id="wa-block" style="display:none">
       <a id="wa-link" href="#" target="_blank" class="wa-btn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        تأكيد طلبك عبر WhatsApp
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        تأكيد أو إلغاء طلبك
       </a>
-      <p class="wa-hint">انقر لفتح واتساب وإرسال تفاصيل طلبك</p>
+      <p class="wa-hint">انقر لعرض تفاصيل طلبك وتأكيده أو إلغائه</p>
     </div>
     <button class="new-order-btn" onclick="newOrder()">إجراء طلب جديد</button>
   </div>
@@ -651,8 +557,76 @@ function backToCatalogue() {
 
 
 // =========================================================
-// CITY DELIVERY DATA
+// CITY SEARCH + DELIVERY DATA
 // =========================================================
+const CITIES_ALL = [
+  // Zone 1 — 35 DH, 24h
+  ['الدار البيضاء','Casablanca',35],['الرباط','Rabat',35],['سلا','Salé',35],
+  ['تمارة','Témara',35],['المحمدية','Mohammadia',35],['القنيطرة','Kenitra',35],
+  ['برشيد','Berrechid',35],['بن سليمان','Ben Slimane',35],['سطات','Settat',35],
+  ['بوزنيقة','Bouznika',35],['مديونة','Mediouna',35],['نواصر','Nouaceur',35],
+  ['الصخيرات','Skhirat',35],['عين حرودة','Ain Harrouda',35],['تيط مليل','Tit Mellil',35],
+  ['المنصورية','El Mansouria',35],
+  // Zone 2 — 39 DH, 24h-48h
+  ['مراكش','Marrakech',39],['فاس','Fès',39],['مكناس','Meknès',39],['طنجة','Tanger',39],
+  ['أكادير','Agadir',39],['وجدة','Oujda',39],['تطوان','Tétouan',39],['الجديدة','El Jadida',39],
+  ['آسفي','Safi',39],['الناظور','Nador',39],['خريبكة','Khouribga',39],['بني ملال','Béni Mellal',39],
+  ['الخميسات','Khémisset',39],['العرائش','Larache',39],['القصر الكبير','Ksar El Kebir',39],
+  ['تازة','Taza',39],['الحسيمة','Al Hoceima',39],['بركان','Berkane',39],
+  ['كرسيف','Guercif',39],['تاوريرت','Taourirt',39],['تاونات','Taounate',39],
+  ['كلميم','Guelmim',39],['تيزنيت','Tiznit',39],['إنزكان','Inzegane',39],
+  ['أيت ملول','Ait Melloul',39],['تارودانت','Taroudant',39],['ورزازات','Ouarzazate',39],
+  ['الراشيدية','Errachidia',39],['شفشاون','Chefchaouen',39],['أزرو','Azrou',39],
+  ['إفران','Ifrane',39],['خنيفرة','Khénifra',39],['ميدلت','Midelt',39],
+  ['قلعة السراغنة','El Kelaa des Sraghna',39],['يوسفية','Youssoufia',39],
+  ['أزيلال','Azilal',39],['صفرو','Sefrou',39],['الحاجب','El Hajeb',39],
+  ['عين تاوجطات','Ain Taoujdate',39],['سيدي قاسم','Sidi Kacem',39],
+  ['سيدي سليمان','Sidi Slimane',39],['سوق الأربعاء','Souk El Arbaa',39],
+  ['المضيق',"M'diq",39],['مرتيل','Martil',39],['الفنيدق','Fnideq',39],
+  ['أصيلة','Asilah',39],['بني أنصار','Beni Ansar',39],['سلوان','Nador (Selouane)',39],
+  ['زايو','Zaio',39],['ميسور','Missour',39],['بولمان','Boulmane',39],
+  ['بيوكرى','Biougra',39],['إيمينتانوت','Imintanoute',39],['شيشاوة','Chichaoua',39],
+  ['الصويرة','Essaouira',39],['دمنات','Demnate',39],['قلعة مكونة','Kalaat M\'gouna',39],
+  ['تنغير','Tinghir',39],['بوجاد','Boujad',39],['قصبة تادلا','Kasba Tadla',39],
+  ['الفقيه بن صالح','Fquih Ben Salah',39],['سوق السبت','Souk Sebt Oulad Nemma',39],
+  ['مشرع بلقصيري','Mechraa Belkassiri',39],['سيدي بنور','Sidi Bennour',39],
+  ['أزمور','Azemmour',39],
+  // Zone 3 — 45 DH, 48h-96h
+  ['العيون','Laayoune',45],['الداخلة','Dakhla',45],['بوجدور','Boujdour',45],
+  ['السمارة','Smara',45],['طانطان','Tan-Tan',45],['أسا','Assa',45],
+  ['زاكورة','Zagora',45],['طاطا','Tata',45],['سيدي إفني','Sidi Ifni',45],
+  ['الريصاني','Rissani',45],['مرزوكة','Merzouga',45],['فكيك','Figuig',45],
+  ['تندرارة','Tendrara',45],['بوعرفة','Bouarfa',45],['طرفاية','Tarfaya',45],
+  ['أسا الزاك','Assa-Zag',45],['أوسرد','Aousserd',45]
+];
+
+function filterCities(q) {
+  const dd = document.getElementById('city-dropdown');
+  const s = (q || '').trim().toLowerCase();
+  if (!s) { dd.classList.remove('open'); return; }
+  const matches = CITIES_ALL.filter(([ar, fr]) =>
+    ar.includes(s) || fr.toLowerCase().includes(s)
+  ).slice(0, 12);
+  if (!matches.length) { dd.classList.remove('open'); return; }
+  dd.innerHTML = matches.map(([ar, fr, fee]) =>
+    `<div class="city-opt" onmousedown="selectCity('${fr.replace(/'/g,"\\'")}','${ar} — ${fr}',${fee})">` +
+    `<span class="co-name">${ar} — ${fr}</span>` +
+    `<span class="co-fee">${fee} DH</span></div>`
+  ).join('');
+  dd.classList.add('open');
+}
+
+function selectCity(frVal, display, fee) {
+  document.getElementById('ville-input').value = display;
+  document.getElementById('ville').value = frVal;
+  document.getElementById('city-dropdown').classList.remove('open');
+  updateDeliveryInfo();
+}
+
+function hideCityDD() {
+  setTimeout(() => document.getElementById('city-dropdown').classList.remove('open'), 160);
+}
+
 const CITY_DELIVERY = {
   // Zone 1 — 35 DH, 24h
   'Casablanca':35,'Rabat':35,'Salé':35,'Témara':35,'Mohammadia':35,'Kenitra':35,
@@ -690,7 +664,7 @@ function getCityDeliveryFee() {
 }
 
 function updateDeliveryInfo() {
-  const ville = document.getElementById('ville').value;
+  const ville = document.getElementById('ville').value || document.getElementById('ville-input').value;
   const fee = CITY_DELIVERY[ville];
   const el = document.getElementById('delivery-info');
   if (fee !== undefined) {
@@ -790,8 +764,7 @@ function showConfirmation(order, client) {
     <div style="margin-top:10px;font-size:.78rem;color:#aaa">المرجع : #${ref}</div>`;
 
   const detailsUrl = window.location.origin + '/api/orders/' + order._id + '/details';
-  const waMsg = `مرحباً، إليك تفاصيل طلبي رقم #${ref} :\n${detailsUrl}`;
-  document.getElementById('wa-link').href = 'https://wa.me/' + VENDEUR_WA + '?text=' + encodeURIComponent(waMsg);
+  document.getElementById('wa-link').href = detailsUrl;
   document.getElementById('wa-block').style.display = 'block';
 
   show('confirm-section');
@@ -802,7 +775,8 @@ function showConfirmation(order, client) {
 function newOrder() {
   ['order-section','confirm-section'].forEach(id => document.getElementById(id).classList.remove('visible'));
   showPageSections();
-  ['prenom','nom','telephone','adresse','ville','email','commentaire'].forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.classList.remove('error'); } });
+  ['prenom','nom','telephone','adresse','ville','ville-input','email','commentaire'].forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.classList.remove('error'); } });
+  document.getElementById('delivery-info')?.classList.remove('show');
   localStorage.removeItem('cart');
   pendingOrderId = null;
   loadProducts();

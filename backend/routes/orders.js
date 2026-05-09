@@ -74,73 +74,189 @@ router.patch('/:id/pay', async (req, res) => {
 router.get('/:id/details', async (req, res) => {
   try {
     const o = await Order.findById(req.params.id).populate('client');
-    if (!o) return res.status(404).send('<h2 style="font-family:sans-serif;padding:40px">Commande introuvable</h2>');
+    if (!o) return res.status(404).send('<h2 style="font-family:sans-serif;padding:40px;text-align:center">Commande introuvable</h2>');
     const ref  = o._id.toString().slice(-6).toUpperCase();
+    const now  = new Date().toLocaleTimeString('ar-MA', { hour: '2-digit', minute: '2-digit' });
     const arts = (o.articles || []).map(a =>
-      `<div class="art-row"><span>${a.nomProduit} ×${a.quantite}</span><span>${(a.prixUnitaire * a.quantite).toFixed(2)} MAD</span></div>`
+      `<div class="art-line">
+        <span class="art-name">${a.nomProduit} <span class="art-qty">×${a.quantite}</span></span>
+        <span class="art-price">${(a.prixUnitaire * a.quantite).toFixed(2)} MAD</span>
+      </div>`
     ).join('');
-    const alreadyDone = o.statut === 'confirmee' || o.statut === 'annulee';
-    const statusBlock = o.statut === 'confirmee'
-      ? '<div class="status-ok">✅ تم تأكيد طلبك بنجاح</div>'
-      : o.statut === 'annulee'
-      ? '<div class="status-cancel">❌ تم إلغاء هذا الطلب</div>'
-      : `<div class="btns">
-           <a href="/api/orders/${o._id}/confirm" class="btn btn-confirm">✅ تأكيد الطلب</a>
-           <a href="/api/orders/${o._id}/cancel"  class="btn btn-cancel">❌ إلغاء الطلب</a>
-         </div>`;
+    const isPending  = o.statut === 'en_attente';
+    const isConfirmed = o.statut === 'confirmee';
+    const actionBlock = isPending
+      ? `<div class="action-bar">
+           <a href="/api/orders/${o._id}/confirm" class="btn-confirm">✅ تأكيد الطلب</a>
+           <a href="/api/orders/${o._id}/cancel"  class="btn-cancel">❌ إلغاء</a>
+         </div>`
+      : isConfirmed
+      ? `<div class="status-banner confirmed">✅ تم تأكيد طلبك بنجاح</div>`
+      : `<div class="status-banner cancelled">❌ تم إلغاء هذا الطلب</div>`;
+
     res.send(`<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>طلب #${ref}</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#FAF7F2;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-  .box{background:#fff;border-radius:20px;padding:28px;max-width:440px;width:100%;box-shadow:0 4px 30px rgba(0,0,0,.10)}
-  .logo{text-align:center;font-size:1.3rem;font-weight:700;color:#8B6343;margin-bottom:18px}
-  .logo span{font-size:2rem;display:block;margin-bottom:4px}
-  .ref{text-align:center;background:#F0EAE0;border-radius:10px;padding:10px;margin-bottom:18px;font-size:.85rem;color:#7a6a5a}
-  .ref strong{display:block;font-size:1.3rem;color:#2C1A0E;margin-top:2px}
-  .section{margin-bottom:14px}
-  .section-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#C8A882;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid #F0EAE0}
-  .info-row{display:flex;justify-content:space-between;font-size:.88rem;padding:4px 0;color:#2C1A0E}
-  .info-row .lbl{color:#9a8a7a}
-  .art-row{display:flex;justify-content:space-between;font-size:.85rem;padding:5px 0;border-bottom:1px dashed #F0EAE0}
-  .art-row:last-child{border:none}
-  .total-row{display:flex;justify-content:space-between;padding:10px 0 0;font-weight:700;font-size:1rem;color:#8B6343;border-top:1px solid #F0EAE0;margin-top:6px}
-  .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
-  .btn{padding:14px;border:none;border-radius:12px;font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;display:block;transition:all .2s}
-  .btn-confirm{background:#4A7C59;color:#fff}
-  .btn-confirm:hover{background:#3d6849}
-  .btn-cancel{background:#fff;color:#C0392B;border:2px solid #C0392B}
-  .btn-cancel:hover{background:#C0392B;color:#fff}
-  .status-ok{background:#E8F0EA;color:#4A7C59;padding:14px;border-radius:12px;text-align:center;font-weight:700;margin-top:16px;font-size:1rem}
-  .status-cancel{background:#fdf0f0;color:#C0392B;padding:14px;border-radius:12px;text-align:center;font-weight:700;margin-top:16px;font-size:1rem}
-  .footer{text-align:center;font-size:.75rem;color:#bbb;margin-top:18px}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#ECE5DD;min-height:100vh;display:flex;flex-direction:column}
+
+  /* ── Header WhatsApp ── */
+  .wa-header{
+    background:#075E54;color:#fff;
+    padding:10px 14px;
+    display:flex;align-items:center;gap:12px;
+    position:sticky;top:0;z-index:10;
+    box-shadow:0 1px 4px rgba(0,0,0,.3);
+  }
+  .wa-avatar{
+    width:40px;height:40px;border-radius:50%;
+    background:#25D366;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.3rem;flex-shrink:0;
+  }
+  .wa-name{font-weight:600;font-size:.95rem;line-height:1.2}
+  .wa-sub{font-size:.72rem;opacity:.8}
+
+  /* ── Chat zone ── */
+  .chat{
+    flex:1;padding:14px 10px 90px;
+    max-width:520px;width:100%;margin:0 auto;
+  }
+
+  /* Date pill */
+  .date-pill{
+    text-align:center;margin:8px 0 14px;
+  }
+  .date-pill span{
+    background:rgba(0,0,0,.18);color:#fff;
+    padding:3px 14px;border-radius:10px;font-size:.72rem;
+  }
+
+  /* ── Bubble (message reçu — côté gauche en RTL = côté droit) ── */
+  .bubble{
+    background:#fff;
+    border-radius:4px 12px 12px 12px;
+    padding:12px 14px 8px;
+    max-width:88%;
+    margin-left:auto;
+    box-shadow:0 1px 2px rgba(0,0,0,.15);
+    position:relative;
+  }
+  .bubble::before{
+    content:'';position:absolute;
+    top:0;right:-7px;
+    border-width:7px 7px 0 0;
+    border-style:solid;
+    border-color:#fff transparent transparent transparent;
+  }
+
+  .bubble-sender{font-size:.72rem;font-weight:700;color:#075E54;margin-bottom:8px}
+
+  .bubble-ref{
+    background:#f0f4f8;border-radius:8px;
+    padding:6px 10px;margin-bottom:10px;
+    font-size:.78rem;color:#666;text-align:center;
+  }
+  .bubble-ref strong{display:block;font-size:1rem;color:#1a1a1a;letter-spacing:.05em}
+
+  .section-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#aaa;margin:8px 0 4px}
+
+  .info-row{display:flex;justify-content:space-between;font-size:.82rem;padding:3px 0;color:#1a1a1a}
+  .info-row .lbl{color:#888}
+
+  .art-line{display:flex;justify-content:space-between;align-items:baseline;font-size:.82rem;padding:4px 0;border-bottom:1px dashed #eee}
+  .art-line:last-of-type{border:none}
+  .art-name{color:#1a1a1a}
+  .art-qty{font-size:.75rem;color:#888}
+  .art-price{font-weight:600;color:#075E54;white-space:nowrap;margin-right:6px}
+
+  .total-line{
+    display:flex;justify-content:space-between;
+    font-weight:700;font-size:.9rem;
+    padding-top:8px;margin-top:4px;
+    border-top:1.5px solid #ddd;
+    color:#075E54;
+  }
+
+  .bubble-time{
+    text-align:left;font-size:.65rem;color:#aaa;
+    margin-top:6px;display:flex;align-items:center;justify-content:flex-end;gap:3px;
+  }
+  .tick{color:#53bdeb;font-size:.7rem}
+
+  /* ── Barre d'action fixe en bas ── */
+  .action-bar{
+    position:fixed;bottom:0;left:0;right:0;
+    background:#fff;
+    padding:10px 14px;
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+    box-shadow:0 -2px 8px rgba(0,0,0,.1);
+    max-width:520px;margin:0 auto;
+  }
+  .btn-confirm,.btn-cancel{
+    padding:13px;border:none;border-radius:10px;
+    font-size:.95rem;font-weight:700;
+    text-align:center;text-decoration:none;
+    cursor:pointer;display:block;transition:all .2s;
+  }
+  .btn-confirm{background:#25D366;color:#fff}
+  .btn-confirm:hover{background:#1ebe5d}
+  .btn-cancel{background:#fff;color:#E53935;border:2px solid #E53935}
+  .btn-cancel:hover{background:#E53935;color:#fff}
+
+  .status-banner{
+    position:fixed;bottom:0;left:0;right:0;
+    padding:16px;text-align:center;
+    font-weight:700;font-size:1rem;
+    max-width:520px;margin:0 auto;
+  }
+  .status-banner.confirmed{background:#DCF8C6;color:#075E54}
+  .status-banner.cancelled{background:#fde8e8;color:#E53935}
 </style>
 </head>
 <body>
-<div class="box">
-  <div class="logo"><span>🍽️</span>Cartes &amp; Recettes</div>
-  <div class="ref">طلبك<strong>#${ref}</strong></div>
-  <div class="section">
-    <div class="section-title">معلومات العميل</div>
+
+<div class="wa-header">
+  <div class="wa-avatar">🍽️</div>
+  <div>
+    <div class="wa-name">Cartes &amp; Recettes</div>
+    <div class="wa-sub">متجر الوصفات</div>
+  </div>
+</div>
+
+<div class="chat">
+  <div class="date-pill"><span>اليوم</span></div>
+
+  <div class="bubble">
+    <div class="bubble-sender">Cartes &amp; Recettes</div>
+
+    <div class="bubble-ref">
+      طلبك
+      <strong>#${ref}</strong>
+    </div>
+
+    <div class="section-lbl">العميل</div>
     <div class="info-row"><span class="lbl">الاسم</span><span>${o.client.prenom} ${o.client.nom}</span></div>
     <div class="info-row"><span class="lbl">الهاتف</span><span>${o.client.telephone}</span></div>
-    <div class="info-row"><span class="lbl">العنوان</span><span>${o.client.adresse}${o.client.ville ? ', ' + o.client.ville : ''}</span></div>
-  </div>
-  <div class="section">
-    <div class="section-title">المنتجات</div>
+    <div class="info-row"><span class="lbl">العنوان</span><span>${o.client.adresse}${o.client.ville ? '، ' + o.client.ville : ''}</span></div>
+
+    <div class="section-lbl" style="margin-top:10px">المنتجات</div>
     ${arts}
-    <div class="total-row"><span>المجموع الإجمالي</span><span>${o.prixTotal.toFixed(2)} MAD</span></div>
+    <div class="total-line"><span>المجموع</span><span>${o.prixTotal.toFixed(2)} MAD</span></div>
+
+    <div class="section-lbl" style="margin-top:10px">الدفع</div>
+    <div class="info-row"><span class="lbl">الطريقة</span><span>${o.modePaiement === 'livraison' ? '🚚 عند التوصيل' : '💳 بطاقة'}</span></div>
+
+    <div class="bubble-time">${now} <span class="tick">✓✓</span></div>
   </div>
-  <div class="section">
-    <div class="section-title">التوصيل</div>
-    <div class="info-row"><span class="lbl">طريقة الدفع</span><span>${o.modePaiement === 'livraison' ? '🚚 عند التوصيل' : '💳 بطاقة بنكية'}</span></div>
-  </div>
-  ${statusBlock}
-  <div class="footer">Cartes &amp; Recettes — Wassafati</div>
 </div>
+
+${actionBlock}
+
 </body></html>`);
   } catch (e) { res.status(500).send('<h2>Erreur serveur</h2>'); }
 });
