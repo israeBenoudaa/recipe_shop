@@ -192,10 +192,16 @@
   .form-group{display:flex;flex-direction:column;gap:6px}
   .form-group.full{grid-column:1/-1}
   .form-group label{font-size:.82rem;font-weight:500;color:#4a6080}
-  .form-group input,.form-group textarea{padding:11px 14px;border:1.5px solid var(--warm);border-radius:var(--rs);font-family:'Cairo',sans-serif;font-size:.95rem;color:var(--deep);background:var(--cream);transition:border-color .2s}
-  .form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--clay);background:#fff}
-  .form-group input.error{border-color:var(--red)}
+  .form-group input,.form-group textarea,.form-group select{padding:11px 14px;border:1.5px solid var(--warm);border-radius:var(--rs);font-family:'Cairo',sans-serif;font-size:.95rem;color:var(--deep);background:var(--cream);transition:border-color .2s}
+  .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--clay);background:#fff}
+  .form-group input.error,.form-group select.error{border-color:var(--red)}
   .form-group textarea{resize:vertical;min-height:90px}
+  .form-group select{cursor:pointer;appearance:auto}
+  .delivery-info{display:none;align-items:center;gap:12px;background:#f0f7f0;border:1.5px solid #b8d8b8;border-radius:var(--rs);padding:10px 14px;margin-top:-10px;margin-bottom:6px;font-size:.88rem;color:#2d6a2d;grid-column:1/-1}
+  .delivery-info.show{display:flex}
+  .delivery-info .di-fee{font-weight:700;font-size:.95rem}
+  .delivery-info .di-sep{opacity:.4}
+  .delivery-info .di-delay{color:#4a7c4a}
 
 
   .order-recap{background:var(--cream);border-radius:var(--rs);padding:20px;margin-bottom:24px}
@@ -222,6 +228,10 @@
   .confirm-details strong{color:var(--earth)}
   .new-order-btn{padding:12px 32px;background:var(--deep);color:var(--clay);border:none;border-radius:100px;font-family:'Cairo',sans-serif;font-size:.95rem;cursor:pointer;transition:var(--tr)}
   .new-order-btn:hover{background:var(--earth);color:#fff}
+  .wa-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:#fff;padding:15px 20px;border-radius:14px;font-family:'Cairo',sans-serif;font-size:1rem;font-weight:700;text-decoration:none;transition:all .2s;margin:20px 0 10px}
+  .wa-btn:hover{background:#1ebe5d;transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,211,102,.4)}
+  .wa-btn svg{flex-shrink:0}
+  .wa-hint{font-size:.78rem;color:#9aab9a;margin-bottom:20px}
 
   .toast{position:fixed;bottom:24px;right:24px;background:var(--deep);color:var(--clay);padding:12px 20px;border-radius:var(--rs);font-size:.9rem;transform:translateY(80px);opacity:0;transition:all .3s;z-index:500;max-width:300px}
   .toast.show{transform:translateY(0);opacity:1}
@@ -286,7 +296,122 @@
       <div class="form-group"><label>الهاتف *</label><input type="tel" id="telephone" placeholder="06 XX XX XX XX"/></div>
       <div class="form-group"><label>البريد الإلكتروني (اختياري)</label><input type="email" id="email" placeholder="email@example.com"/></div>
       <div class="form-group"><label>عنوان التوصيل *</label><input type="text" id="adresse" placeholder="الشارع الرئيسي، الحي"/></div>
-      <div class="form-group"><label>المدينة *</label><input type="text" id="ville" placeholder="الدار البيضاء"/></div>
+      <div class="form-group"><label>المدينة *</label>
+        <select id="ville" onchange="updateDeliveryInfo()">
+          <option value="">-- اختر مدينتك --</option>
+          <optgroup label="📦 35 DH — توصيل خلال 24 ساعة">
+            <option value="Casablanca">الدار البيضاء — Casablanca</option>
+            <option value="Rabat">الرباط — Rabat</option>
+            <option value="Salé">سلا — Salé</option>
+            <option value="Témara">تمارة — Témara</option>
+            <option value="Mohammadia">المحمدية — Mohammadia</option>
+            <option value="Kenitra">القنيطرة — Kénitra</option>
+            <option value="Berrechid">برشيد — Berrechid</option>
+            <option value="Ben Slimane">بن سليمان — Ben Slimane</option>
+            <option value="Settat">سطات — Settat</option>
+            <option value="Bouznika">بوزنيقة — Bouznika</option>
+            <option value="Mediouna">مديونة — Mediouna</option>
+            <option value="Nouaceur">نواصر — Nouaceur</option>
+            <option value="Skhirat">الصخيرات — Skhirat</option>
+            <option value="Ain Harrouda">عين حرودة — Ain Harrouda</option>
+            <option value="Tit Mellil">تيط مليل — Tit Mellil</option>
+            <option value="El Mansouria">المنصورية — El Mansouria</option>
+          </optgroup>
+          <optgroup label="📦 40 DH — توصيل خلال 24 إلى 48 ساعة">
+            <option value="Marrakech">مراكش — Marrakech</option>
+            <option value="Fès">فاس — Fès</option>
+            <option value="Meknès">مكناس — Meknès</option>
+            <option value="Tanger">طنجة — Tanger</option>
+            <option value="Agadir">أكادير — Agadir</option>
+            <option value="Oujda">وجدة — Oujda</option>
+            <option value="Tétouan">تطوان — Tétouan</option>
+            <option value="El Jadida">الجديدة — El Jadida</option>
+            <option value="Safi">آسفي — Safi</option>
+            <option value="Nador">الناظور — Nador</option>
+            <option value="Khouribga">خريبكة — Khouribga</option>
+            <option value="Béni Mellal">بني ملال — Béni Mellal</option>
+            <option value="Khémisset">الخميسات — Khémisset</option>
+            <option value="Larache">العرائش — Larache</option>
+            <option value="Ksar El Kebir">القصر الكبير — Ksar El Kebir</option>
+            <option value="Taza">تازة — Taza</option>
+            <option value="Al Hoceima">الحسيمة — Al Hoceima</option>
+            <option value="Berkane">بركان — Berkane</option>
+            <option value="Guercif">كرسيف — Guercif</option>
+            <option value="Taourirt">تاوريرت — Taourirt</option>
+            <option value="Taounate">تاونات — Taounate</option>
+            <option value="Guelmim">كلميم — Guelmim</option>
+            <option value="Tiznit">تيزنيت — Tiznit</option>
+            <option value="Inzegane">إنزكان — Inzegane</option>
+            <option value="Ait Melloul">أيت ملول — Ait Melloul</option>
+            <option value="Taroudant">تارودانت — Taroudant</option>
+            <option value="Ouarzazate">ورزازات — Ouarzazate</option>
+            <option value="Errachidia">الراشيدية — Errachidia</option>
+            <option value="Chefchaouen">شفشاون — Chefchaouen</option>
+            <option value="Azrou">أزرو — Azrou</option>
+            <option value="Ifrane">إفران — Ifrane</option>
+            <option value="Khénifra">خنيفرة — Khénifra</option>
+            <option value="Midelt">ميدلت — Midelt</option>
+            <option value="El Kelaa des Sraghna">قلعة السراغنة — El Kelaa des Sraghna</option>
+            <option value="Youssoufia">يوسفية — Youssoufia</option>
+            <option value="Azilal">أزيلال — Azilal</option>
+            <option value="Sefrou">صفرو — Sefrou</option>
+            <option value="El Hajeb">الحاجب — El Hajeb</option>
+            <option value="Ain Taoujdate">عين تاوجطات — Ain Taoujdate</option>
+            <option value="Sidi Kacem">سيدي قاسم — Sidi Kacem</option>
+            <option value="Sidi Slimane">سيدي سليمان — Sidi Slimane</option>
+            <option value="Souk El Arbaa">سوق الأربعاء — Souk El Arbaa</option>
+            <option value="M'diq">المضيق — M'diq</option>
+            <option value="Martil">مرتيل — Martil</option>
+            <option value="Fnideq">الفنيدق — Fnideq</option>
+            <option value="Asilah">أصيلة — Asilah</option>
+            <option value="Beni Ansar">بني أنصار — Beni Ansar</option>
+            <option value="Nador (Selouane)">سلوان — Selouane</option>
+            <option value="Zaio">زايو — Zaio</option>
+            <option value="Missour">ميسور — Missour</option>
+            <option value="Boulmane">بولمان — Boulmane</option>
+            <option value="Biougra">بيوكرى — Biougra</option>
+            <option value="Imintanoute">إيمينتانوت — Imintanoute</option>
+            <option value="Chichaoua">شيشاوة — Chichaoua</option>
+            <option value="Essaouira">الصويرة — Essaouira</option>
+            <option value="Demnate">دمنات — Demnate</option>
+            <option value="Kalaat M'gouna">قلعة مكونة — Kalaat M'gouna</option>
+            <option value="Tinghir">تنغير — Tinghir</option>
+            <option value="Boujad">بوجاد — Boujad</option>
+            <option value="Kasba Tadla">قصبة تادلا — Kasba Tadla</option>
+            <option value="Fquih Ben Salah">الفقيه بن صالح — Fquih Ben Salah</option>
+            <option value="Souk Sebt Oulad Nemma">سوق السبت — Souk Sebt</option>
+            <option value="Mechraa Belkassiri">مشرع بلقصيري — Mechraa Belkassiri</option>
+            <option value="Sidi Bennour">سيدي بنور — Sidi Bennour</option>
+            <option value="Azemmour">أزمور — Azemmour</option>
+            <option value="Khenifra">خنيفرة — Khenifra</option>
+          </optgroup>
+          <optgroup label="📦 45 DH — توصيل خلال 48 إلى 96 ساعة">
+            <option value="Laayoune">العيون — Laayoune</option>
+            <option value="Dakhla">الداخلة — Dakhla</option>
+            <option value="Boujdour">بوجدور — Boujdour</option>
+            <option value="Smara">السمارة — Smara</option>
+            <option value="Tan-Tan">طانطان — Tan-Tan</option>
+            <option value="Assa">أسا — Assa</option>
+            <option value="Zagora">زاكورة — Zagora</option>
+            <option value="Tata">طاطا — Tata</option>
+            <option value="Sidi Ifni">سيدي إفني — Sidi Ifni</option>
+            <option value="Rissani">الريصاني — Rissani</option>
+            <option value="Merzouga">مرزوكة — Merzouga</option>
+            <option value="Figuig">فكيك — Figuig</option>
+            <option value="Tendrara">تندرارة — Tendrara</option>
+            <option value="Bouarfa">بوعرفة — Bouarfa</option>
+            <option value="Tarfaya">طرفاية — Tarfaya</option>
+            <option value="Assa-Zag">أسا الزاك — Assa-Zag</option>
+            <option value="Aousserd">أوسرد — Aousserd</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="delivery-info" id="delivery-info">
+        <span>🚚</span>
+        <span class="di-fee" id="di-fee"></span>
+        <span class="di-sep">|</span>
+        <span class="di-delay" id="di-delay"></span>
+      </div>
     </div>
 
     <p class="form-section-label">ملاحظات</p>
@@ -305,6 +430,13 @@
     <h2 id="confirm-title">تم تأكيد الطلب !</h2>
     <p id="confirm-msg">شكراً لثقتك بنا.</p>
     <div class="confirm-details" id="confirm-details"></div>
+    <div id="wa-block" style="display:none">
+      <a id="wa-link" href="#" target="_blank" class="wa-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        تأكيد طلبك عبر WhatsApp
+      </a>
+      <p class="wa-hint">انقر لفتح واتساب وإرسال تفاصيل طلبك</p>
+    </div>
     <button class="new-order-btn" onclick="newOrder()">إجراء طلب جديد</button>
   </div>
 </div>
@@ -518,13 +650,67 @@ function backToCatalogue() {
 }
 
 
+// =========================================================
+// CITY DELIVERY DATA
+// =========================================================
+const CITY_DELIVERY = {
+  // Zone 1 — 35 DH, 24h
+  'Casablanca':35,'Rabat':35,'Salé':35,'Témara':35,'Mohammadia':35,'Kenitra':35,
+  'Berrechid':35,'Ben Slimane':35,'Settat':35,'Bouznika':35,'Mediouna':35,
+  'Nouaceur':35,'Skhirat':35,'Ain Harrouda':35,'Tit Mellil':35,'El Mansouria':35,
+  // Zone 2 — 39 DH, 24h-48h
+  'Marrakech':39,'Fès':39,'Meknès':39,'Tanger':39,'Agadir':39,'Oujda':39,
+  'Tétouan':39,'El Jadida':39,'Safi':39,'Nador':39,'Khouribga':39,'Béni Mellal':39,
+  'Khémisset':39,'Larache':39,'Ksar El Kebir':39,'Taza':39,'Al Hoceima':39,
+  'Berkane':39,'Guercif':39,'Taourirt':39,'Taounate':39,'Guelmim':39,'Tiznit':39,
+  'Inzegane':39,'Ait Melloul':39,'Taroudant':39,'Ouarzazate':39,'Errachidia':39,
+  'Chefchaouen':39,'Azrou':39,'Ifrane':39,'Khénifra':39,'Midelt':39,
+  'El Kelaa des Sraghna':39,'Youssoufia':39,'Azilal':39,'Sefrou':39,'El Hajeb':39,
+  'Ain Taoujdate':39,'Sidi Kacem':39,'Sidi Slimane':39,'Souk El Arbaa':39,
+  "M'diq":39,'Martil':39,'Fnideq':39,'Asilah':39,'Beni Ansar':39,
+  'Nador (Selouane)':39,'Zaio':39,'Missour':39,'Boulmane':39,'Biougra':39,
+  'Imintanoute':39,'Chichaoua':39,'Essaouira':39,'Demnate':39,
+  'Kalaat M\'gouna':39,'Tinghir':39,'Boujad':39,'Kasba Tadla':39,
+  'Fquih Ben Salah':39,'Souk Sebt Oulad Nemma':39,'Mechraa Belkassiri':39,
+  'Sidi Bennour':39,'Azemmour':39,'Khenifra':39,
+  // Zone 3 — 45 DH, 48h-96h
+  'Laayoune':45,'Dakhla':45,'Boujdour':45,'Smara':45,'Tan-Tan':45,'Assa':45,
+  'Zagora':45,'Tata':45,'Sidi Ifni':45,'Rissani':45,'Merzouga':45,'Figuig':45,
+  'Tendrara':45,'Bouarfa':45,'Tarfaya':45,'Assa-Zag':45,'Aousserd':45
+};
+
+const CITY_DELAY = {
+  35: '⏱ توصيل خلال 24 ساعة',
+  39: '⏱ توصيل خلال 24 إلى 48 ساعة',
+  45: '⏱ توصيل خلال 48 إلى 96 ساعة'
+};
+
+function getCityDeliveryFee() {
+  return CITY_DELIVERY[document.getElementById('ville')?.value] || 0;
+}
+
+function updateDeliveryInfo() {
+  const ville = document.getElementById('ville').value;
+  const fee = CITY_DELIVERY[ville];
+  const el = document.getElementById('delivery-info');
+  if (fee !== undefined) {
+    document.getElementById('di-fee').textContent = fee + ' DH';
+    document.getElementById('di-delay').textContent = CITY_DELAY[fee];
+    el.classList.add('show');
+  } else {
+    el.classList.remove('show');
+  }
+  renderOrderRecap();
+}
+
 function renderOrderRecap() {
   const items = Object.values(cart).map(({ product: p, quantity }) => {
     const fresh = products.find(x => x._id === p._id) || p;
     return { product: fresh, quantity };
   });
   const productTotal  = items.reduce((s, i) => s + i.product.prix * i.quantity, 0);
-  const deliveryTotal = items.reduce((max, { product: p }) => Math.max(max, p.prixLivraison || 0), 0);
+  const cityFee       = getCityDeliveryFee();
+  const deliveryTotal = cityFee > 0 ? cityFee : items.reduce((max, { product: p }) => Math.max(max, p.prixLivraison || 0), 0);
   const grandTotal    = productTotal + deliveryTotal;
 
   const itemsHtml = items.map(({ product: p, quantity }) =>
@@ -565,13 +751,16 @@ async function goToNextStep() {
       body: JSON.stringify({
         client: { prenom, nom, telephone, adresse, ville, email },
         articles: Object.values(cart).map(({ product, quantity }) => ({ produitId: product._id, quantite: quantity })),
+        fraisLivraison: getCityDeliveryFee(),
         modePaiement: 'livraison', commentaire
       })
     });
     const data = await res.json();
     if (data.success) {
       document.getElementById('order-section').classList.remove('visible');
-      showConfirmation(data.data, { prenom, nom, telephone, adresse, ville, modePaiement: 'livraison', commentaire });
+      const fee = getCityDeliveryFee();
+      const delaiLivraison = fee ? CITY_DELAY[fee] : '';
+      showConfirmation(data.data, { prenom, nom, telephone, adresse, ville, modePaiement: 'livraison', commentaire, delaiLivraison });
     } else { showToast(data.message || 'حدث خطأ ما'); }
   } catch { showToast('خطأ في الاتصال بالخادم'); }
 
@@ -581,20 +770,30 @@ async function goToNextStep() {
 // =========================================================
 // CONFIRMATION
 // =========================================================
+const VENDEUR_WA = '212702208275';
+
 function showConfirmation(order, client) {
+  const ref = order._id.toString().slice(-6).toUpperCase();
   document.getElementById('confirm-icon').textContent = '✓';
-  document.getElementById('confirm-title').textContent = 'تم تأكيد الطلب !';
-  document.getElementById('confirm-msg').textContent = 'تم تسجيل طلبك. ستدفع عند التوصيل.';
+  document.getElementById('confirm-title').textContent = 'تم تسجيل طلبك !';
+  document.getElementById('confirm-msg').textContent = 'أرسل تفاصيل طلبك عبر واتساب لتأكيده.';
   document.getElementById('confirm-details').innerHTML = `
     <div><strong>العميل :</strong> ${client.prenom} ${client.nom}</div>
     <div><strong>الهاتف :</strong> ${client.telephone}</div>
     <div><strong>العنوان :</strong> ${client.adresse}</div>
     ${client.ville ? `<div><strong>المدينة :</strong> ${client.ville}</div>` : ''}
+    ${client.delaiLivraison ? `<div><strong>التوصيل :</strong> ${client.delaiLivraison}</div>` : ''}
     <div><strong>المنتجات :</strong> ${order.nombreArticles} منتج</div>
     <div><strong>المجموع :</strong> ${fmt(order.prixTotal)} MAD</div>
     <div><strong>الدفع :</strong> 🚚 الدفع عند التوصيل</div>
     ${client.commentaire ? `<div><strong>ملاحظة :</strong> ${client.commentaire}</div>` : ''}
-    <div style="margin-top:10px;font-size:.78rem;color:#aaa">المرجع : ${order._id}</div>`;
+    <div style="margin-top:10px;font-size:.78rem;color:#aaa">المرجع : #${ref}</div>`;
+
+  const detailsUrl = window.location.origin + '/api/orders/' + order._id + '/details';
+  const waMsg = `مرحباً، إليك تفاصيل طلبي رقم #${ref} :\n${detailsUrl}`;
+  document.getElementById('wa-link').href = 'https://wa.me/' + VENDEUR_WA + '?text=' + encodeURIComponent(waMsg);
+  document.getElementById('wa-block').style.display = 'block';
+
   show('confirm-section');
   cart = {}; updateCartUI();
   window.scrollTo({ top: 0, behavior: 'smooth' });
