@@ -104,27 +104,21 @@ router.get('/:id/details', async (req, res) => {
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Segoe UI',system-ui,sans-serif;background:#ECE5DD;min-height:100vh;display:flex;flex-direction:column}
 
-  /* ── Header WhatsApp ── */
+  /* ── Header ── */
   .wa-header{
-    background:#075E54;color:#fff;
-    padding:10px 14px;
-    display:flex;align-items:center;gap:12px;
+    background:#075E54;
+    padding:12px 16px;
+    display:flex;align-items:center;justify-content:center;
     position:sticky;top:0;z-index:10;
     box-shadow:0 1px 4px rgba(0,0,0,.3);
+    width:100%;
   }
-  .wa-avatar{
-    width:40px;height:40px;border-radius:50%;
-    background:#25D366;
-    display:flex;align-items:center;justify-content:center;
-    font-size:1.3rem;flex-shrink:0;
-  }
-  .wa-name{font-weight:600;font-size:.95rem;line-height:1.2}
-  .wa-sub{font-size:.72rem;opacity:.8}
+  .wa-header img{height:44px;width:auto;object-fit:contain;filter:brightness(0) invert(1)}
 
   /* ── Chat zone ── */
   .chat{
     flex:1;padding:14px 10px 90px;
-    max-width:520px;width:100%;margin:0 auto;
+    max-width:580px;width:100%;margin:0 auto;
   }
 
   /* Date pill */
@@ -153,8 +147,6 @@ router.get('/:id/details', async (req, res) => {
     border-style:solid;
     border-color:#fff transparent transparent transparent;
   }
-
-  .bubble-sender{font-size:.72rem;font-weight:700;color:#075E54;margin-bottom:8px}
 
   .bubble-ref{
     background:#f0f4f8;border-radius:8px;
@@ -192,14 +184,13 @@ router.get('/:id/details', async (req, res) => {
   .action-bar{
     position:fixed;bottom:0;left:0;right:0;
     background:#fff;
-    padding:10px 14px;
+    padding:10px 16px;
     display:grid;grid-template-columns:1fr 1fr;gap:10px;
     box-shadow:0 -2px 8px rgba(0,0,0,.1);
-    max-width:520px;margin:0 auto;
   }
   .btn-confirm,.btn-cancel{
-    padding:13px;border:none;border-radius:10px;
-    font-size:.95rem;font-weight:700;
+    padding:14px;border:none;border-radius:10px;
+    font-size:1rem;font-weight:700;
     text-align:center;text-decoration:none;
     cursor:pointer;display:block;transition:all .2s;
   }
@@ -210,9 +201,8 @@ router.get('/:id/details', async (req, res) => {
 
   .status-banner{
     position:fixed;bottom:0;left:0;right:0;
-    padding:16px;text-align:center;
-    font-weight:700;font-size:1rem;
-    max-width:520px;margin:0 auto;
+    padding:18px;text-align:center;
+    font-weight:700;font-size:1.05rem;
   }
   .status-banner.confirmed{background:#DCF8C6;color:#075E54}
   .status-banner.cancelled{background:#fde8e8;color:#E53935}
@@ -221,18 +211,13 @@ router.get('/:id/details', async (req, res) => {
 <body>
 
 <div class="wa-header">
-  <div class="wa-avatar">🍽️</div>
-  <div>
-    <div class="wa-name">Cartes &amp; Recettes</div>
-    <div class="wa-sub">متجر الوصفات</div>
-  </div>
+  <img src="/images/Fichier 1.png" alt="logo"/>
 </div>
 
 <div class="chat">
   <div class="date-pill"><span>اليوم</span></div>
 
   <div class="bubble">
-    <div class="bubble-sender">Cartes &amp; Recettes</div>
 
     <div class="bubble-ref">
       طلبك

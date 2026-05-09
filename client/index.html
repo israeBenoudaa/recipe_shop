@@ -336,13 +336,6 @@
     <h2 id="confirm-title">تم تأكيد الطلب !</h2>
     <p id="confirm-msg">شكراً لثقتك بنا.</p>
     <div class="confirm-details" id="confirm-details"></div>
-    <div id="wa-block" style="display:none">
-      <a id="wa-link" href="#" target="_blank" class="wa-btn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-        تأكيد أو إلغاء طلبك
-      </a>
-      <p class="wa-hint">انقر لعرض تفاصيل طلبك وتأكيده أو إلغائه</p>
-    </div>
     <button class="new-order-btn" onclick="newOrder()">إجراء طلب جديد</button>
   </div>
 </div>
@@ -749,8 +742,8 @@ const VENDEUR_WA = '212702208275';
 function showConfirmation(order, client) {
   const ref = order._id.toString().slice(-6).toUpperCase();
   document.getElementById('confirm-icon').textContent = '✓';
-  document.getElementById('confirm-title').textContent = 'تم تسجيل طلبك !';
-  document.getElementById('confirm-msg').textContent = 'أرسل تفاصيل طلبك عبر واتساب لتأكيده.';
+  document.getElementById('confirm-title').textContent = 'تم تأكيد الطلب !';
+  document.getElementById('confirm-msg').textContent = 'شكراً لثقتك بنا.';
   document.getElementById('confirm-details').innerHTML = `
     <div><strong>العميل :</strong> ${client.prenom} ${client.nom}</div>
     <div><strong>الهاتف :</strong> ${client.telephone}</div>
@@ -762,10 +755,6 @@ function showConfirmation(order, client) {
     <div><strong>الدفع :</strong> 🚚 الدفع عند التوصيل</div>
     ${client.commentaire ? `<div><strong>ملاحظة :</strong> ${client.commentaire}</div>` : ''}
     <div style="margin-top:10px;font-size:.78rem;color:#aaa">المرجع : #${ref}</div>`;
-
-  const detailsUrl = window.location.origin + '/api/orders/' + order._id + '/details';
-  document.getElementById('wa-link').href = detailsUrl;
-  document.getElementById('wa-block').style.display = 'block';
 
   show('confirm-section');
   cart = {}; updateCartUI();

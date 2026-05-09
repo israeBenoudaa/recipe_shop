@@ -53,7 +53,6 @@
   .price-big span{font-size:1rem;color:#aaa;font-weight:400;margin-right:4px}
   .price-original{font-size:1.1rem;font-weight:400;color:#aaa;text-decoration:line-through}
   .stock-pill{font-size:.82rem;color:var(--green);background:var(--green-bg);padding:5px 16px;border-radius:100px;font-weight:600}
-  .delivery-pill{font-size:.82rem;color:var(--clay);background:var(--cream);padding:5px 16px;border-radius:100px;font-weight:500}
   .no-stock{color:var(--red);background:#fdecea}
 
   .section-lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--clay);margin-bottom:10px;display:flex;align-items:center;gap:8px}
@@ -219,7 +218,6 @@ function renderProduct() {
           <span class="stock-pill ${!inStock ? 'no-stock' : ''}">
             ${inStock ? p.unitesDispo + ' في المخزون' : 'نفذ المخزون'}
           </span>
-          ${p.prixLivraison > 0 ? `<span class="delivery-pill">🚚 توصيل : ${fmt(p.prixLivraison)} MAD</span>` : `<span class="delivery-pill">🚚 توصيل مجاني</span>`}
         </div>
 
         <p class="section-lbl">أضف إلى السلة</p>
