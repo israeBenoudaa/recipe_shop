@@ -116,7 +116,7 @@ router.get('/:id/details', async (req, res) => {
     position:sticky;top:0;z-index:10;
     box-shadow:0 2px 12px rgba(0,0,0,.3);
   }
-  .top-header img{height:80px;width:auto;object-fit:contain;margin-top:52px}
+  .top-header img{height:62px;width:auto;object-fit:contain;margin-top:52px}
 
   .page{flex:1;padding:20px 16px 110px;max-width:520px;width:100%;margin:0 auto}
 
