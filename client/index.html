@@ -191,9 +191,10 @@
     .form-grid{grid-template-columns:1fr}
     #order-section,#confirm-section{padding:28px 18px}
     .products-grid{grid-template-columns:1fr}
-    .features{grid-template-columns:1fr}
-    .feature-item{flex-direction:row;justify-content:flex-start;border-right:none;border-bottom:1px solid var(--border)}
-    .feature-item:last-child{border-bottom:none}
+    .features{grid-template-columns:repeat(3,1fr)}
+    .feature-item{padding:18px 8px;gap:8px;font-size:.76rem;border-right:1px solid var(--border)}
+    .feature-item:last-child{border-right:none}
+    .feature-item img{height:38px;width:38px;padding:7px;border-radius:10px}
   }
 </style>
 </head>
