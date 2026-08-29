@@ -83,8 +83,8 @@ router.get('/:id/details', async (req, res) => {
         <span class="art-price">${(a.prixUnitaire * a.quantite).toFixed(2)} MAD</span>
       </div>`
     ).join('');
-    const fraisLivraison = (o.articles || []).reduce((max, a) => Math.max(max, a.prixLivraison || 0), 0);
-    const sousTotal = o.prixTotal - fraisLivraison;
+    const sousTotal = (o.articles || []).reduce((sum, a) => sum + (a.prixUnitaire * a.quantite), 0);
+    const fraisLivraison = Math.max(0, o.prixTotal - sousTotal);
     const isPending  = o.statut === 'en_attente';
     const isConfirmed = o.statut === 'confirmee';
     const actionBlock = isPending
@@ -111,12 +111,12 @@ router.get('/:id/details', async (req, res) => {
   .top-header{
     background:linear-gradient(135deg,#0A1628 0%,#0D1F40 100%);
     padding:0 20px;
-    height:72px;
+    height:88px;
     display:flex;align-items:center;justify-content:center;
     position:sticky;top:0;z-index:10;
     box-shadow:0 2px 12px rgba(0,0,0,.3);
   }
-  .top-header img{height:62px;width:auto;object-fit:contain;margin-top:14px}
+  .top-header img{height:80px;width:auto;object-fit:contain;margin-top:28px}
 
   .page{flex:1;padding:20px 16px 110px;max-width:520px;width:100%;margin:0 auto}
 
@@ -151,9 +151,9 @@ router.get('/:id/details', async (req, res) => {
     padding:8px 0;border-bottom:1px solid #F1F5F9;font-size:.9rem;
   }
   .art-line:last-of-type{border:none}
-  .art-name{color:#0F172A;font-weight:600}
+  .art-name{color:#0F172A;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
   .art-qty{font-size:.78rem;color:#94A3B8;margin-right:4px}
-  .art-price{font-weight:700;color:#1A56DB;white-space:nowrap}
+  .art-price{font-weight:600;color:#1A56DB;white-space:nowrap;font-size:.9rem}
 
   .total-row{
     display:flex;justify-content:space-between;align-items:center;

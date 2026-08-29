@@ -27,8 +27,8 @@ async function sendOrderConfirmation(telephone, order, prenom) {
   const ref = order._id.toString().slice(-6).toUpperCase();
   const base = (process.env.BASE_URL || 'https://wassafati.com').replace(/\/$/, '');
   const link = `${base}/api/orders/${order._id}/details`;
-  const fraisLivraison = (order.articles || []).reduce((max, a) => Math.max(max, a.prixLivraison || 0), 0);
-  const sousTotal = order.prixTotal - fraisLivraison;
+  const sousTotal = (order.articles || []).reduce((sum, a) => sum + (a.prixUnitaire * a.quantite), 0);
+  const fraisLivraison = Math.max(0, order.prixTotal - sousTotal);
   const body =
     `🛍️ مرحباً ${prenom}!\n\n` +
     `تم استلام طلبك بنجاح ✅\n` +
