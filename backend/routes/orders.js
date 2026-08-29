@@ -109,23 +109,23 @@ router.get('/:id/details', async (req, res) => {
   .top-header{
     background:linear-gradient(135deg,#0A1628 0%,#0D1F40 100%);
     padding:0 20px;
-    height:100px;
+    height:72px;
     display:flex;align-items:center;justify-content:center;
     position:sticky;top:0;z-index:10;
     box-shadow:0 2px 12px rgba(0,0,0,.3);
   }
-  .top-header img{height:90px;width:auto;object-fit:contain;margin-top:20px}
+  .top-header img{height:62px;width:auto;object-fit:contain;margin-top:14px}
 
   .page{flex:1;padding:20px 16px 110px;max-width:520px;width:100%;margin:0 auto}
 
   .ref-card{
-    background:#1A56DB;border-radius:16px;
-    padding:18px 20px;margin-bottom:16px;
+    background:#1A56DB;border-radius:14px;
+    padding:14px 20px;margin-bottom:16px;
     text-align:center;color:#fff;
-    box-shadow:0 4px 16px rgba(26,86,219,.35);
+    box-shadow:0 4px 16px rgba(26,86,219,.25);
   }
-  .ref-label{font-size:.78rem;opacity:.85;margin-bottom:4px}
-  .ref-number{font-size:1.9rem;font-weight:900;letter-spacing:.06em}
+  .ref-label{font-size:.72rem;opacity:.75;margin-bottom:6px;letter-spacing:.08em;text-transform:uppercase}
+  .ref-number{font-size:1.5rem;font-weight:600;letter-spacing:.12em;opacity:.95}
 
   .card{
     background:#fff;border-radius:16px;
