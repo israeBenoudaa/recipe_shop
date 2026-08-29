@@ -111,12 +111,13 @@ router.get('/:id/details', async (req, res) => {
   .top-header{
     background:linear-gradient(135deg,#0A1628 0%,#0D1F40 100%);
     padding:0 20px;
-    height:52px;
+    height:70px;
     display:flex;align-items:center;justify-content:center;
     position:sticky;top:0;z-index:10;
     box-shadow:0 2px 12px rgba(0,0,0,.3);
+    overflow:visible;
   }
-  .top-header img{height:62px;width:auto;object-fit:contain;margin-top:52px}
+  .top-header img{height:56px;width:auto;object-fit:contain;display:block;margin-top:0}
 
   .page{flex:1;padding:20px 16px 110px;max-width:520px;width:100%;margin:0 auto}
 
