@@ -100,144 +100,125 @@ router.get('/:id/details', async (req, res) => {
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>طلب #${ref}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',system-ui,sans-serif;background:#ECE5DD;min-height:100vh;display:flex;flex-direction:column}
+  body{font-family:'Cairo',sans-serif;background:#F0F4F8;min-height:100vh;display:flex;flex-direction:column}
 
-  /* ── Header ── */
-  .wa-header{
-    background:#075E54;
-    padding:12px 16px;
+  .top-header{
+    background:linear-gradient(135deg,#0A1628 0%,#0D1F40 100%);
+    padding:0 20px;
+    height:80px;
     display:flex;align-items:center;justify-content:center;
     position:sticky;top:0;z-index:10;
-    box-shadow:0 1px 4px rgba(0,0,0,.3);
-    width:100%;
+    box-shadow:0 2px 12px rgba(0,0,0,.3);
   }
-  .wa-header img{height:44px;width:auto;object-fit:contain;filter:brightness(0) invert(1)}
+  .top-header img{height:68px;width:auto;object-fit:contain;margin-top:14px}
 
-  /* ── Chat zone ── */
-  .chat{
-    flex:1;padding:14px 10px 90px;
-    max-width:580px;width:100%;margin:0 auto;
+  .page{flex:1;padding:20px 16px 110px;max-width:520px;width:100%;margin:0 auto}
+
+  .ref-card{
+    background:#1A56DB;border-radius:16px;
+    padding:18px 20px;margin-bottom:16px;
+    text-align:center;color:#fff;
+    box-shadow:0 4px 16px rgba(26,86,219,.35);
   }
+  .ref-label{font-size:.78rem;opacity:.85;margin-bottom:4px}
+  .ref-number{font-size:1.9rem;font-weight:900;letter-spacing:.06em}
 
-  /* Date pill */
-  .date-pill{
-    text-align:center;margin:8px 0 14px;
+  .card{
+    background:#fff;border-radius:16px;
+    padding:18px 20px;margin-bottom:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
   }
-  .date-pill span{
-    background:rgba(0,0,0,.18);color:#fff;
-    padding:3px 14px;border-radius:10px;font-size:.72rem;
+  .card-title{
+    font-size:.7rem;font-weight:700;letter-spacing:.1em;
+    color:#94A3B8;text-transform:uppercase;margin-bottom:12px;
   }
-
-  /* ── Bubble (message reçu — côté gauche en RTL = côté droit) ── */
-  .bubble{
-    background:#fff;
-    border-radius:4px 12px 12px 12px;
-    padding:12px 14px 8px;
-    max-width:88%;
-    margin-left:auto;
-    box-shadow:0 1px 2px rgba(0,0,0,.15);
-    position:relative;
+  .info-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:7px 0;border-bottom:1px solid #F1F5F9;font-size:.9rem;
   }
-  .bubble::before{
-    content:'';position:absolute;
-    top:0;right:-7px;
-    border-width:7px 7px 0 0;
-    border-style:solid;
-    border-color:#fff transparent transparent transparent;
+  .info-row:last-child{border:none}
+  .info-row .lbl{color:#94A3B8;font-weight:600}
+  .info-row .val{color:#0F172A;font-weight:700;text-align:left}
+
+  .art-line{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 0;border-bottom:1px solid #F1F5F9;font-size:.9rem;
   }
-
-  .bubble-ref{
-    background:#f0f4f8;border-radius:8px;
-    padding:6px 10px;margin-bottom:10px;
-    font-size:.78rem;color:#666;text-align:center;
-  }
-  .bubble-ref strong{display:block;font-size:1rem;color:#1a1a1a;letter-spacing:.05em}
-
-  .section-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#aaa;margin:8px 0 4px}
-
-  .info-row{display:flex;justify-content:space-between;font-size:.82rem;padding:3px 0;color:#1a1a1a}
-  .info-row .lbl{color:#888}
-
-  .art-line{display:flex;justify-content:space-between;align-items:baseline;font-size:.82rem;padding:4px 0;border-bottom:1px dashed #eee}
   .art-line:last-of-type{border:none}
-  .art-name{color:#1a1a1a}
-  .art-qty{font-size:.75rem;color:#888}
-  .art-price{font-weight:600;color:#075E54;white-space:nowrap;margin-right:6px}
+  .art-name{color:#0F172A;font-weight:600}
+  .art-qty{font-size:.78rem;color:#94A3B8;margin-right:4px}
+  .art-price{font-weight:700;color:#1A56DB;white-space:nowrap}
 
-  .total-line{
-    display:flex;justify-content:space-between;
-    font-weight:700;font-size:.9rem;
-    padding-top:8px;margin-top:4px;
-    border-top:1.5px solid #ddd;
-    color:#075E54;
+  .total-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:12px;margin-top:4px;
+    border-top:2px solid #E2E8F0;
+    font-size:1.05rem;font-weight:900;color:#0F172A;
   }
+  .total-row span:last-child{color:#1A56DB;font-size:1.15rem}
 
-  .bubble-time{
-    text-align:left;font-size:.65rem;color:#aaa;
-    margin-top:6px;display:flex;align-items:center;justify-content:flex-end;gap:3px;
-  }
-  .tick{color:#53bdeb;font-size:.7rem}
-
-  /* ── Barre d'action fixe en bas ── */
   .action-bar{
     position:fixed;bottom:0;left:0;right:0;
-    background:#fff;
-    padding:10px 16px;
+    background:#fff;padding:12px 16px;
     display:grid;grid-template-columns:1fr 1fr;gap:10px;
-    box-shadow:0 -2px 8px rgba(0,0,0,.1);
+    box-shadow:0 -2px 16px rgba(0,0,0,.1);
   }
   .btn-confirm,.btn-cancel{
-    padding:14px;border:none;border-radius:10px;
-    font-size:1rem;font-weight:700;
-    text-align:center;text-decoration:none;
-    cursor:pointer;display:block;transition:all .2s;
+    padding:15px;border:none;border-radius:12px;
+    font-family:'Cairo',sans-serif;font-size:1rem;font-weight:700;
+    text-align:center;text-decoration:none;cursor:pointer;
+    display:block;transition:all .2s;
   }
-  .btn-confirm{background:#25D366;color:#fff}
-  .btn-confirm:hover{background:#1ebe5d}
-  .btn-cancel{background:#fff;color:#E53935;border:2px solid #E53935}
-  .btn-cancel:hover{background:#E53935;color:#fff}
+  .btn-confirm{background:#10B981;color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.3)}
+  .btn-confirm:hover{background:#059669}
+  .btn-cancel{background:#FEF2F2;color:#EF4444;border:2px solid #EF4444}
+  .btn-cancel:hover{background:#EF4444;color:#fff}
 
   .status-banner{
     position:fixed;bottom:0;left:0;right:0;
-    padding:18px;text-align:center;
-    font-weight:700;font-size:1.05rem;
+    padding:20px;text-align:center;
+    font-family:'Cairo',sans-serif;font-weight:800;font-size:1.1rem;
+    border-radius:20px 20px 0 0;
   }
-  .status-banner.confirmed{background:#DCF8C6;color:#075E54}
-  .status-banner.cancelled{background:#fde8e8;color:#E53935}
+  .status-banner.confirmed{background:#ECFDF5;color:#10B981;border-top:3px solid #10B981}
+  .status-banner.cancelled{background:#FEF2F2;color:#EF4444;border-top:3px solid #EF4444}
 </style>
 </head>
 <body>
 
-<div class="wa-header">
-  <img src="/images/Fichier 1.png" alt="logo"/>
+<div class="top-header">
+  <img src="/images/Fichier 1.png" alt="Wassafati"/>
 </div>
 
-<div class="chat">
-  <div class="date-pill"><span>اليوم</span></div>
+<div class="page">
 
-  <div class="bubble">
-
-    <div class="bubble-ref">
-      طلبك
-      <strong>#${ref}</strong>
-    </div>
-
-    <div class="section-lbl">العميل</div>
-    <div class="info-row"><span class="lbl">الاسم</span><span>${o.client.prenom} ${o.client.nom}</span></div>
-    <div class="info-row"><span class="lbl">الهاتف</span><span>${o.client.telephone}</span></div>
-    <div class="info-row"><span class="lbl">العنوان</span><span>${o.client.adresse}${o.client.ville ? '، ' + o.client.ville : ''}</span></div>
-
-    <div class="section-lbl" style="margin-top:10px">المنتجات</div>
-    ${arts}
-    <div class="total-line"><span>المجموع</span><span>${o.prixTotal.toFixed(2)} MAD</span></div>
-
-    <div class="section-lbl" style="margin-top:10px">الدفع</div>
-    <div class="info-row"><span class="lbl">الطريقة</span><span>${o.modePaiement === 'livraison' ? '🚚 عند التوصيل' : '💳 بطاقة'}</span></div>
-
-    <div class="bubble-time">${now} <span class="tick">✓✓</span></div>
+  <div class="ref-card">
+    <div class="ref-label">رقم طلبك</div>
+    <div class="ref-number">#${ref}</div>
   </div>
+
+  <div class="card">
+    <div class="card-title">معلومات العميل</div>
+    <div class="info-row"><span class="lbl">الاسم</span><span class="val">${o.client.prenom} ${o.client.nom}</span></div>
+    <div class="info-row"><span class="lbl">الهاتف</span><span class="val">${o.client.telephone}</span></div>
+    <div class="info-row"><span class="lbl">العنوان</span><span class="val">${o.client.adresse}${o.client.ville ? '، ' + o.client.ville : ''}</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">المنتجات</div>
+    ${arts}
+    <div class="total-row"><span>المجموع</span><span>${o.prixTotal.toFixed(2)} MAD</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">الدفع</div>
+    <div class="info-row"><span class="lbl">الطريقة</span><span class="val">${o.modePaiement === 'livraison' ? '🚚 عند التوصيل' : '💳 بطاقة'}</span></div>
+  </div>
+
 </div>
 
 ${actionBlock}
