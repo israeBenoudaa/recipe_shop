@@ -27,12 +27,15 @@ async function sendOrderConfirmation(telephone, order, prenom) {
   const ref = order._id.toString().slice(-6).toUpperCase();
   const base = (process.env.BASE_URL || 'https://wassafati.com').replace(/\/$/, '');
   const link = `${base}/api/orders/${order._id}/details`;
+  const fraisLivraison = (order.articles || []).reduce((max, a) => Math.max(max, a.prixLivraison || 0), 0);
+  const sousTotal = order.prixTotal - fraisLivraison;
   const body =
     `🛍️ مرحباً ${prenom}!\n\n` +
     `تم استلام طلبك بنجاح ✅\n` +
     `رقم المرجع: *#${ref}*\n\n` +
-    `📦 ${order.nombreArticles} منتج — 💰 ${order.prixTotal.toFixed(2)} MAD\n` +
-    `🚚 الدفع عند التوصيل\n\n` +
+    `📦 المنتجات: ${sousTotal.toFixed(2)} MAD\n` +
+    `🚚 التوصيل: ${fraisLivraison.toFixed(2)} MAD\n` +
+    `💰 المجموع: *${order.prixTotal.toFixed(2)} MAD*\n\n` +
     `👇 اضغط على الرابط لتأكيد أو إلغاء طلبك:\n` +
     `${link}\n\n` +
     `شكراً لثقتك بنا 🌟`;

@@ -83,6 +83,8 @@ router.get('/:id/details', async (req, res) => {
         <span class="art-price">${(a.prixUnitaire * a.quantite).toFixed(2)} MAD</span>
       </div>`
     ).join('');
+    const fraisLivraison = (o.articles || []).reduce((max, a) => Math.max(max, a.prixLivraison || 0), 0);
+    const sousTotal = o.prixTotal - fraisLivraison;
     const isPending  = o.statut === 'en_attente';
     const isConfirmed = o.statut === 'confirmee';
     const actionBlock = isPending
@@ -211,6 +213,8 @@ router.get('/:id/details', async (req, res) => {
   <div class="card">
     <div class="card-title">المنتجات</div>
     ${arts}
+    <div class="info-row"><span class="lbl">المنتجات</span><span class="val">${sousTotal.toFixed(2)} MAD</span></div>
+    <div class="info-row"><span class="lbl">🚚 التوصيل</span><span class="val">${fraisLivraison.toFixed(2)} MAD</span></div>
     <div class="total-row"><span>المجموع</span><span>${o.prixTotal.toFixed(2)} MAD</span></div>
   </div>
 
