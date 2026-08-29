@@ -25,15 +25,16 @@ async function sendOrderConfirmation(telephone, order, prenom) {
   }
   const to  = toWA(telephone);
   const ref = order._id.toString().slice(-6).toUpperCase();
+  const base = (process.env.BASE_URL || 'https://wassafati.com').replace(/\/$/, '');
+  const link = `${base}/api/orders/${order._id}/details`;
   const body =
     `🛍️ مرحباً ${prenom}!\n\n` +
     `تم استلام طلبك بنجاح ✅\n` +
-    `رقم المرجع: #${ref}\n\n` +
-    `📦 ${order.nombreArticles} منتج\n` +
-    `💰 ${order.prixTotal.toFixed(2)} MAD\n` +
+    `رقم المرجع: *#${ref}*\n\n` +
+    `📦 ${order.nombreArticles} منتج — 💰 ${order.prixTotal.toFixed(2)} MAD\n` +
     `🚚 الدفع عند التوصيل\n\n` +
-    `للتأكيد، أرسل:\n` +
-    `*CONFIRMER*\n\n` +
+    `👇 اضغط على الرابط لتأكيد أو إلغاء طلبك:\n` +
+    `${link}\n\n` +
     `شكراً لثقتك بنا 🌟`;
   try {
     await getClient().messages.create({ from: FROM(), to, body });
