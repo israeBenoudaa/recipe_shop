@@ -235,10 +235,25 @@ ${actionBlock}
 // GET confirmer commande (client via lien WhatsApp)
 router.get('/:id/confirm', async (req, res) => {
   try {
-    const o = await Order.findById(req.params.id);
+    const o = await Order.findById(req.params.id).populate('client');
     if (!o) return res.status(404).send('<h2>Commande introuvable</h2>');
     if (o.statut === 'en_attente') {
       await Order.findByIdAndUpdate(req.params.id, { statut: 'confirmee', paiementStatut: 'en_attente' });
+
+      // Créer colis Atlas Livraison + envoyer tracking WhatsApp
+      if (process.env.ATLAS_API_KEY) {
+        try {
+          const { createColis } = require('../services/atlas');
+          const colis = await createColis(o);
+          await Order.findByIdAndUpdate(req.params.id, { atlasCode: colis.code });
+          const trackLink = `https://www.atlaslivraison.ma/track/${colis.code}`;
+          const { sendTrackingNotification } = require('../services/whatsapp');
+          await sendTrackingNotification(o.client.telephone, colis.code, trackLink, o.client.prenom);
+          console.log(`✅ Atlas colis créé: ${colis.code}`);
+        } catch (atlasErr) {
+          console.error('❌ Atlas:', atlasErr.message);
+        }
+      }
     }
     res.redirect(`/api/orders/${req.params.id}/details`);
   } catch (e) { res.status(500).send('<h2>Erreur serveur</h2>'); }

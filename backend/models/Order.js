@@ -13,6 +13,7 @@ const orderSchema = new mongoose.Schema({
   modePaiement:   { type: String, enum: ['carte', 'livraison'], required: true },
   paiementStatut: { type: String, enum: ['en_attente', 'paye', 'echec'], default: 'en_attente' },
   statut:         { type: String, enum: ['en_attente', 'confirmee', 'expediee', 'livree', 'annulee'], default: 'en_attente' },
-  commentaire:    { type: String, trim: true, default: '' }
+  commentaire:    { type: String, trim: true, default: '' },
+  atlasCode:      { type: String, default: '' }
 }, { timestamps: true });
 module.exports = mongoose.model('Order', orderSchema);

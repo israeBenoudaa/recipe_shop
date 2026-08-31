@@ -47,4 +47,22 @@ async function sendOrderConfirmation(telephone, order, prenom) {
   }
 }
 
-module.exports = { sendOrderConfirmation, toWA };
+async function sendTrackingNotification(telephone, atlasCode, trackLink, prenom) {
+  if (!process.env.TWILIO_ACCOUNT_SID) return;
+  const to = toWA(telephone);
+  const body =
+    `🚚 مرحباً ${prenom}!\n\n` +
+    `طلبك في الطريق إليك 📦\n\n` +
+    `رقم التتبع: *${atlasCode}*\n` +
+    `👇 تتبع طلبك من هنا:\n` +
+    `${trackLink}\n\n` +
+    `شكراً لثقتك بنا 🌟`;
+  try {
+    await getClient().messages.create({ from: FROM(), to, body });
+    console.log(`✅ WhatsApp tracking envoyé → ${to}`);
+  } catch (e) {
+    console.error(`❌ WhatsApp tracking (${to}):`, e.message);
+  }
+}
+
+module.exports = { sendOrderConfirmation, sendTrackingNotification, toWA };
