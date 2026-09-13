@@ -69,15 +69,25 @@ async function sendOrderConfirmation(telephone, order, prenom) {
 async function sendTrackingNotification(telephone, atlasCode, trackLink, prenom) {
   if (!process.env.TWILIO_ACCOUNT_SID) return;
   const to = toWA(telephone);
-  const body =
-    `🚚 مرحباً ${prenom}!\n\n` +
-    `طلبك في الطريق إليك 📦\n\n` +
-    `رقم التتبع: *${atlasCode}*\n` +
-    `👇 تتبع طلبك من هنا:\n` +
-    `${trackLink}\n\n` +
-    `شكراً لثقتك بنا 🌟`;
   try {
-    await getClient().messages.create({ from: FROM(), to, body });
+    if (process.env.TWILIO_TRACKING_TEMPLATE_SID) {
+      await getClient().messages.create({
+        from: FROM(),
+        to,
+        contentSid: process.env.TWILIO_TRACKING_TEMPLATE_SID,
+        contentVariables: JSON.stringify({ "1": atlasCode })
+      });
+    } else {
+      await getClient().messages.create({
+        from: FROM(),
+        to,
+        body:
+          `طلبك في الطريق إليك 📦\n` +
+          `رقم التتبع: *${atlasCode}*\n` +
+          `${trackLink}\n\n` +
+          `شكراً لثقتك بنا 🌟`
+      });
+    }
     console.log(`✅ WhatsApp tracking envoyé → ${to}`);
   } catch (e) {
     console.error(`❌ WhatsApp tracking (${to}):`, e.message);
