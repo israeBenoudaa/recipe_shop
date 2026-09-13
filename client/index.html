@@ -640,20 +640,19 @@ function renderOrderRecap() {
   });
   const productTotal  = items.reduce((s, i) => s + i.product.prix * i.quantity, 0);
   const cityFee       = getCityDeliveryFee();
-  const deliveryTotal = cityFee > 0 ? cityFee : items.reduce((max, { product: p }) => Math.max(max, p.prixLivraison || 0), 0);
-  const grandTotal    = productTotal + deliveryTotal;
+  const grandTotal    = productTotal + (cityFee > 0 ? cityFee : 0);
 
   const itemsHtml = items.map(({ product: p, quantity }) =>
     `<div class="recap-item"><span>${p.nom} × ${quantity}</span><span>${fmt(p.prix * quantity)} MAD</span></div>`
   ).join('');
 
-  const deliveryHtml = deliveryTotal > 0
-    ? `<div class="recap-delivery"><span>🚚 التوصيل</span><span>${fmt(deliveryTotal)} MAD</span></div>`
-    : '';
+  const deliveryHtml = cityFee > 0
+    ? `<div class="recap-delivery"><span>🚚 التوصيل</span><span>${fmt(cityFee)} MAD</span></div>`
+    : `<div class="recap-delivery" style="color:#94a3b8"><span>🚚 التوصيل</span><span>حسب المدينة</span></div>`;
 
   const html = itemsHtml + deliveryHtml +
-    `<div class="${deliveryTotal > 0 ? 'recap-grand-total' : 'recap-total'}">
-      <span>${deliveryTotal > 0 ? 'المجموع الإجمالي' : 'المجموع'}</span>
+    `<div class="${cityFee > 0 ? 'recap-grand-total' : 'recap-total'}">
+      <span>${cityFee > 0 ? 'المجموع الإجمالي' : 'المجموع'}</span>
       <span>${fmt(grandTotal)} MAD</span>
     </div>`;
 
