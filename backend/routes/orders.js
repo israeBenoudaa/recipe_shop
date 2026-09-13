@@ -246,7 +246,7 @@ router.get('/:id/confirm', async (req, res) => {
           const { createColis } = require('../services/atlas');
           const colis = await createColis(o);
           await Order.findByIdAndUpdate(req.params.id, { atlasCode: colis.code });
-          const trackLink = `https://www.atlaslivraison.ma/track/${colis.code}`;
+          const trackLink = `https://atlaslivraison.com/#tracking`;
           const { sendTrackingNotification } = require('../services/whatsapp');
           await sendTrackingNotification(o.client.telephone, colis.code, trackLink, o.client.prenom);
           console.log(`✅ Atlas colis créé: ${colis.code}`);
