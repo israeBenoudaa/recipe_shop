@@ -22,6 +22,7 @@ app.use('/vendor',  express.static(path.join(__dirname, '../vendor')));
 app.use('/images',  express.static(path.join(__dirname, '../images')));
 app.get('/apple-touch-icon.png', (req, res) => res.sendFile(path.join(__dirname, '../images/Fichier 2.png')));
 app.get('/apple-touch-icon-precomposed.png', (req, res) => res.sendFile(path.join(__dirname, '../images/Fichier 2.png')));
+app.get('/order/:id', (req, res) => res.redirect(`/api/orders/${req.params.id}/details`));
 
 // API auth (public)
 app.use('/api/auth', require('./routes/auth'));

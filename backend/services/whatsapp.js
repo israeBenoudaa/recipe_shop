@@ -25,22 +25,41 @@ async function sendOrderConfirmation(telephone, order, prenom) {
   }
   const to  = toWA(telephone);
   const ref = order._id.toString().slice(-6).toUpperCase();
-  const base = (process.env.BASE_URL || 'https://wassafati.com').replace(/\/$/, '');
-  const link = `${base}/api/orders/${order._id}/details`;
   const sousTotal = (order.articles || []).reduce((sum, a) => sum + (a.prixUnitaire * a.quantite), 0);
   const fraisLivraison = Math.max(0, order.prixTotal - sousTotal);
-  const body =
-    `🛍️ مرحباً ${prenom}!\n\n` +
-    `تم استلام طلبك بنجاح ✅\n` +
-    `رقم المرجع: *#${ref}*\n\n` +
-    `📦 المنتجات: ${sousTotal.toFixed(2)} MAD\n` +
-    `🚚 التوصيل: ${fraisLivraison.toFixed(2)} MAD\n` +
-    `💰 المجموع: *${order.prixTotal.toFixed(2)} MAD*\n\n` +
-    `👇 اضغط على الرابط لتأكيد أو إلغاء طلبك:\n` +
-    `${link}\n\n` +
-    `شكراً لثقتك بنا 🌟`;
+
   try {
-    await getClient().messages.create({ from: FROM(), to, body });
+    if (process.env.TWILIO_TEMPLATE_SID) {
+      // Template approuvé Meta — envoi via Content API
+      await getClient().messages.create({
+        from: FROM(),
+        to,
+        contentSid: process.env.TWILIO_TEMPLATE_SID,
+        contentVariables: JSON.stringify({
+          "1": ref,
+          "2": sousTotal.toFixed(2),
+          "3": fraisLivraison.toFixed(2),
+          "4": order.prixTotal.toFixed(2),
+          "5": order._id.toString()
+        })
+      });
+    } else {
+      // Fallback texte libre (sandbox Twilio uniquement)
+      const base = (process.env.BASE_URL || 'https://wassafati.com').replace(/\/$/, '');
+      const link = `${base}/order/${order._id}`;
+      await getClient().messages.create({
+        from: FROM(),
+        to,
+        body:
+          `تم استلام طلبك بنجاح ✅\n` +
+          `🧾 رقم المرجع: ${ref}\n` +
+          `📦 المنتجات: ${sousTotal.toFixed(2)} DH\n` +
+          `🚚 التوصيل: ${fraisLivraison.toFixed(2)} DH\n` +
+          `💰 المجموع: ${order.prixTotal.toFixed(2)} DH\n\n` +
+          `${link}\n\n` +
+          `شكراً لثقتك بنا 🌟`
+      });
+    }
     console.log(`✅ WhatsApp envoyé → ${to}`);
   } catch (e) {
     console.error(`❌ WhatsApp (${to}):`, e.message);
