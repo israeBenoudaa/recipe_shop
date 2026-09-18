@@ -43,10 +43,14 @@ async function findCityId(cityName) {
   if (!cityName) return null;
   const cities = await getCities();
   const q = cityName.toLowerCase().trim();
-  const match = cities.find(c =>
-    c.name.toLowerCase().includes(q) || q.includes(c.name.toLowerCase())
-  );
-  return match?.id || null;
+  // Prioritize exact match, then starts-with, then contains
+  const exact = cities.find(c => c.name.toLowerCase() === q);
+  if (exact) return exact.id;
+  const starts = cities.find(c => c.name.toLowerCase().startsWith(q) || q.startsWith(c.name.toLowerCase()));
+  if (starts) return starts.id;
+  const contains = cities.find(c => c.name.toLowerCase().includes(q));
+  if (contains) return contains.id;
+  return null;
 }
 
 async function createColis(order) {
