@@ -39,16 +39,26 @@ async function getCities() {
   return _cities || [];
 }
 
+function normalize(s) {
+  return s.toLowerCase().trim()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/\s*\(\s*/g, '(').replace(/\s*\)\s*/g, ')')
+    .replace(/\s*-\s*/g, '-')
+    .replace(/\s+/g, ' ');
+}
+
 async function findCityId(cityName) {
   if (!cityName) return null;
   const cities = await getCities();
   const q = cityName.toLowerCase().trim();
-  // Prioritize exact match, then starts-with, then contains
+  const qn = normalize(q);
   const exact = cities.find(c => c.name.toLowerCase() === q);
   if (exact) return exact.id;
-  const starts = cities.find(c => c.name.toLowerCase().startsWith(q) || q.startsWith(c.name.toLowerCase()));
+  const normExact = cities.find(c => normalize(c.name) === qn);
+  if (normExact) return normExact.id;
+  const starts = cities.find(c => normalize(c.name).startsWith(qn) || qn.startsWith(normalize(c.name)));
   if (starts) return starts.id;
-  const contains = cities.find(c => c.name.toLowerCase().includes(q));
+  const contains = cities.find(c => normalize(c.name).includes(qn));
   if (contains) return contains.id;
   return null;
 }
