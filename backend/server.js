@@ -33,6 +33,25 @@ app.use('/api/orders',    require('./routes/orders'));
 app.use('/api/clients',   require('./routes/clients'));
 app.use('/api/whatsapp',  require('./routes/whatsapp'));
 
+// Diagnostic: liste des villes Atlas (à supprimer après vérification)
+app.get('/api/atlas/cities', async (req, res) => {
+  try {
+    const { createColis, ...atlas } = require('./services/atlas');
+    const https = require('https');
+    const KEY = process.env.ATLAS_API_KEY;
+    if (!KEY) return res.status(500).json({ error: 'ATLAS_API_KEY manquante' });
+    https.get({ hostname: 'api.atlaslivraison.com', path: '/api/external/cities', headers: { 'x-api-key': KEY } }, r => {
+      let d = '';
+      r.on('data', c => d += c);
+      r.on('end', () => {
+        const json = JSON.parse(d);
+        const names = (json.data || []).map(c => c.name).sort();
+        res.json({ total: names.length, cities: names });
+      });
+    }).on('error', e => res.status(500).json({ error: e.message }));
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // Routes racines
 app.get('/',       (req, res) => res.redirect('/client'));
 app.get('/client', (req, res) => res.sendFile(path.join(__dirname, '../client/index.html')));
